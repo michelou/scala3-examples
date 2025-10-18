@@ -14,8 +14,8 @@
 
         <!-- Scala settings -->
         <scala.groupId>org.scala-lang</scala.groupId>
-        <scala.version>2.13.16</scala.version>
-        <scala3.version>3.3.5</scala3.version>
+        <scala.version>2.13.17</scala.version>
+        <scala3.version>3.3.7</scala3.version>
         <scala.local.install>true</scala.local.install>
 
         <!-- Maven plugin versions -->
@@ -25,20 +25,20 @@
         <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
         <scalatest.version>3.2.19</scalatest.version>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
-        <maven.compiler.version>3.14.0</maven.compiler.version>
+        <maven.compiler.version>3.14.1</maven.compiler.version>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
         <!-- Note: JUnit 5 requires Surefire version 2.22.1 or higher -->
         <maven.surefire.version>3.5.2</maven.surefire.version>
         <!-- https://mvnrepository.com/artifact/org.specs2/specs2-junit -->
-        <specs2.version>5.5.8</specs2.version>
+        <specs2.version>5.6.4</specs2.version>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
         <maven.jar.version>3.4.2</maven.jar.version>
         <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
-        <exec.maven.version>3.5.0</exec.maven.version>
+        <exec.maven.version>3.6.1</exec.maven.version>
         <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
-        <hamcrest.version>2.2</hamcrest.version>
+        <hamcrest.version>3.0</hamcrest.version>
         <!-- https://mvnrepository.com/artifact/org.apache.ivy/ivy -->
-        <ivy.version>2.5.2</ivy.version>
+        <ivy.version>2.5.3</ivy.version>
         <!-- https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core -->
         <!-- https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess -->
         <jmh.version>1.37</jmh.version>

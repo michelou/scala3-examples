@@ -1,5 +1,5 @@
 // overrides default "build"
-buildDir file("target")
+buildDir = file("target")
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -8,7 +8,7 @@ java {
 
 project.ext {
     // sanetize properties from gradle.properties
-    scalaVersion = hasProperty("scalaVersion") ? scalaVersion : "3.3.5"
+    scalaVersion = hasProperty("scalaVersion") ? scalaVersion : "3.3.7"
     scalaLocalInstall = hasProperty("scalaLocalInstall") ? scalaLocalInstall.toBoolean() : false
     isScala3 = scalaVersion.startsWith("3")
     scalacMainClass = isScala3 ? "dotty.tools.dotc.Main": "scala.tools.nsc.Main"
@@ -67,14 +67,14 @@ clean.doLast {
 
 tasks.withType(JavaCompile) {
     // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html
-    options.deprecation true
-    options.encoding "UTF8"
+    options.deprecation = true
+    options.encoding = "UTF8"
 }
 
 task compileScala(type: JavaExec) {
-    dependsOn compileJava
+    dependsOn compileJava, compileTestJava
 
-    description "Compile Scala source files"
+    description = "Compile Scala source files"
 
     classpath = buildClasspath
 
@@ -101,7 +101,7 @@ build {
 task run(type: JavaExec) {
     dependsOn build
 
-    description "Execute Scala main class $mainClassName"
+    description = "Execute Scala main class $mainClassName"
 
     classpath = buildClasspath
 
@@ -117,7 +117,7 @@ task run(type: JavaExec) {
 task compileTest(type: JavaExec) {
     dependsOn compileScala
 
-    description "Compile Scala test source files"
+    description = "Compile Scala test source files"
 
     classpath = files(buildClasspath, testClasspath)
 

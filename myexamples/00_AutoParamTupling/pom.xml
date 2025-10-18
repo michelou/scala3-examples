@@ -73,6 +73,7 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
+                            <scalaVersion>${scala3.version}</scalaVersion>
                             <includes>
                                 <include>scala/**/*.scala</include>
                             </includes>

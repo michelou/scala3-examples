@@ -37,9 +37,9 @@
 
         <!-- Scala settings -->
         <scala.groupId>org.scala-lang</scala.groupId>
-        <scala.version>2.13.16</scala.version>
+        <scala.version>2.13.17</scala.version>
         <scala.binary.version>2.13</scala.binary.version>
-        <scala3.version>3.3.5</scala3.version>
+        <scala3.version>3.3.7</scala3.version>
         <scala.local.install>true</scala.local.install>
 
         <!-- Maven plugin versions -->
@@ -64,9 +64,9 @@
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <junit.version>4.13.2</junit.version>
         <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine -->
-        <junit.platform.version>1.12.1</junit.platform.version>
+        <junit.platform.version>1.14.0</junit.platform.version>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
-        <jupiter.version>5.12.1</jupiter.version>
+        <jupiter.version>5.14.0</jupiter.version>
 
         <m2.directory>${user.home}/.m2/repository</m2.directory>
 

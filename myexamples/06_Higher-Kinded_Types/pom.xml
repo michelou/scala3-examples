@@ -74,6 +74,7 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
+                            <scalaVersion>${scala3.version}</scalaVersion>
                             <additionalClasspathElements>
                                 <additionalClasspathElement>${m2.hamcrest-core.jar}</additionalClasspathElement>
                                 <additionalClasspathElement>${m2.junit.jar}</additionalClasspathElement>

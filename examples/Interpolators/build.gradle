@@ -2,10 +2,10 @@ plugins {
     id "java"
 }
 
-group "$appGroup"
-version "$appVersion"
+group = "$appGroup"
+version = "$appVersion"
 
-description """Gradle example project to build/run Scala 3 applications"""
+description = """Gradle example project to build/run Scala 3 applications"""
 
 apply from: "../common.gradle"
 

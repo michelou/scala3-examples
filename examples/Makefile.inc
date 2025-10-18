@@ -47,23 +47,27 @@ TOUCH      = touch
 WGET       = wget
 endif
 
+## https://mvnrepository.com/artifact/org.hamcrest/hamcrest
+HAMCREST_VERSION = 3.0
+## https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all
+HAMCREST_ALL_VERSION = 1.3
 ## https://mvnrepository.com/artifact/junit/junit
 JUNIT_VERSION = 4.13.2
-##
-SCALA_VERSION = 2.13.16
-## 
-SCALA3_VERSION = 3.3.5
+## https://mvnrepository.com/artifact/org.scala-lang/scala-library
+SCALA_VERSION = 2.13.17
+## https://mvnrepository.com/artifact/org.scala-lang/scala3-library
+SCALA3_VERSION = 3.3.7
 ## https://mvnrepository.com/artifact/org.scalatest/scalatest
 SCALATEST_VERSION = 3.2.19
 ## https://mvnrepository.com/artifact/org.specs2/specs2-core
 ## Note: Specs2 5.x depends on Scala 3 while Specs2 4.x depends on Scala 2 or Scala 3
-SPECS2_VERSION = 5.5.8
+SPECS2_VERSION = 5.6.4
 
 SCALA_LIB_JAR         = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala-library-$(SCALA_VERSION).jar" | tail -1)
 SCALA3_LIB_JAR        = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala3-library_3-$(SCALA3_VERSION).jar" | tail -1)
 
-HAMCREST_JAR          = $(shell $(FIND) "$(LOCAL_REPO)/org/hamcrest" -name "hamcrest-2.2.jar")
-HAMCREST_ALL_JAR      = $(shell $(FIND) "$(LOCAL_REPO)/org/hamcrest" -name "hamcrest-all-1.3.jar")
+HAMCREST_JAR          = $(shell $(FIND) "$(LOCAL_REPO)/org/hamcrest" -name "hamcrest-$(HAMCREST_VERSION).jar")
+HAMCREST_ALL_JAR      = $(shell $(FIND) "$(LOCAL_REPO)/org/hamcrest" -name "hamcrest-all-$(HAMCREST_ALL_VERSION).jar")
 JUNIT_JAR             = $(shell $(FIND) "$(LOCAL_REPO)/junit/junit" -name "junit-$(JUNIT_VERSION).jar")
 JUNIT_INTF_JAR        = $(shell $(FIND) "$(LOCAL_REPO)/com/novocode" -name "junit-interface-0.11.jar")
 
@@ -102,10 +106,30 @@ ifeq (,$(wildcard $(SCALA3_LIB_JAR)))
 	$(MVN) $(MVN_OPTS) install:install-file -Dfile="$(JAR_FILE)" -DgroupId=$(GROUP_ID) -DartifactId=$(ARTIFACT_ID) -Dversion=$(VERSION) -Dpackaging=jar
 	$(eval SCALA3_LIB_JAR := $(shell $(FIND) "$(LOCAL_REPO)/$(subst .,/,$(GROUP_ID))" -name $(ARTIFACT_ID)-$(VERSION).jar))
 endif
+ifeq (,$(wildcard $(HAMCREST_JAR)))
+	$(eval GROUP_ID := org/hamcrest)
+	$(eval ARTIFACT_ID := hamcrest)
+	$(eval VERSION := $(HAMCREST_VERSION))
+	$(eval JAR_FILE := $(TMP)/$(ARTIFACT_ID)-$(VERSION).jar)
+	$(eval URL := $(REMOTE_REPO)/$(subst .,/,$(GROUP_ID))/$(ARTIFACT_ID)/$(VERSION)/$(ARTIFACT_ID)-$(VERSION).jar)
+	$(WGET) $(WGET_OPTS) $(URL) || $(error Failed to download $(ARTIFACT_ID)-$(VERSION).jar)
+	$(MVN) $(MVN_OPTS) install:install-file -Dfile="$(JAR_FILE)" -DgroupId=$(GROUP_ID) -DartifactId=$(ARTIFACT_ID) -Dversion=$(VERSION) -Dpackaging=jar
+	$(eval HAMCREST_JAR := $(shell $(FIND) "$(LOCAL_REPO)/$(subst .,/,$(GROUP_ID))" -name $(ARTIFACT_ID)-$(VERSION).jar))
+endif
+ifeq (,$(wildcard $(HAMCREST_ALL_JAR)))
+	$(eval GROUP_ID := org/hamcrest)
+	$(eval ARTIFACT_ID := hamcrest-all)
+	$(eval VERSION := $(HAMCREST_ALL_VERSION))
+	$(eval JAR_FILE := $(TMP)/$(ARTIFACT_ID)-$(VERSION).jar)
+	$(eval URL := $(REMOTE_REPO)/$(subst .,/,$(GROUP_ID))/$(ARTIFACT_ID)/$(VERSION)/$(ARTIFACT_ID)-$(VERSION).jar)
+	$(WGET) $(WGET_OPTS) $(URL) || $(error Failed to download $(ARTIFACT_ID)-$(VERSION).jar)
+	$(MVN) $(MVN_OPTS) install:install-file -Dfile="$(JAR_FILE)" -DgroupId=$(GROUP_ID) -DartifactId=$(ARTIFACT_ID) -Dversion=$(VERSION) -Dpackaging=jar
+	$(eval HAMCREST_ALL_JAR := $(shell $(FIND) "$(LOCAL_REPO)/$(subst .,/,$(GROUP_ID))" -name $(ARTIFACT_ID)-$(VERSION).jar))
+endif
 ifeq (,$(wildcard $(JUNIT_JAR)))
 	$(eval GROUP_ID := junit)
 	$(eval ARTIFACT_ID := junit)
-    $(eval VERSION := $(JUNIT_VERSION))
+	$(eval VERSION := $(JUNIT_VERSION))
 	$(eval JAR_FILE := $(TMP)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(eval URL := $(REMOTE_REPO)/$(subst .,/,$(GROUP_ID))/$(ARTIFACT_ID)/$(VERSION)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(WGET) $(WGET_OPTS) $(URL) || $(error Failed to download $(ARTIFACT_ID)-$(VERSION).jar)
@@ -115,7 +139,7 @@ endif
 ifeq (,$(wildcard $(SCALATEST_JAR)))
 	$(eval GROUP_ID := org.scalatest)
 	$(eval ARTIFACT_ID := scalatest_3)
-    $(eval VERSION := $(SCALATEST_VERSION))
+	$(eval VERSION := $(SCALATEST_VERSION))
 	$(eval JAR_FILE := $(TMP)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(eval URL := $(REMOTE_REPO)/$(subst .,/,$(GROUP_ID))/$(ARTIFACT_ID)/$(VERSION)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(WGET) $(WGET_OPTS) $(URL) || $(error Failed to download $(ARTIFACT_ID)-$(VERSION).jar)
@@ -125,7 +149,7 @@ endif
 ifeq (,$(wildcard $(SCALATEST_FUNSPEC_JAR)))
 	$(eval GROUP_ID := org.scalatest)
 	$(eval ARTIFACT_ID := scalatest-funspec_3)
-    $(eval VERSION := $(SCALATEST_VERSION))
+	$(eval VERSION := $(SCALATEST_VERSION))
 	$(eval JAR_FILE := $(TMP)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(eval URL := $(REMOTE_REPO)/$(subst .,/,$(GROUP_ID))/$(ARTIFACT_ID)/$(VERSION)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(WGET) $(WGET_OPTS) $(URL) || $(error Failed to download $(ARTIFACT_ID)-$(VERSION).jar)
@@ -135,7 +159,7 @@ endif
 ifeq (,$(wildcard $(SCALACTIC_JAR)))
 	$(eval GROUP_ID := org.scalactic)
 	$(eval ARTIFACT_ID := scalactic_3)
-    $(eval VERSION := $(SCALATEST_VERSION))
+	$(eval VERSION := $(SCALATEST_VERSION))
 	$(eval JAR_FILE := $(TMP)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(eval URL := $(REMOTE_REPO)/$(subst .,/,$(GROUP_ID))/$(ARTIFACT_ID)/$(VERSION)/$(ARTIFACT_ID)-$(VERSION).jar)
 	$(WGET) $(WGET_OPTS) $(URL) || $(error Failed to download $(ARTIFACT_ID)-$(VERSION).jar)
