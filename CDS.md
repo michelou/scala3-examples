@@ -26,7 +26,7 @@ This document is part of a series of topics related to [Scala 3][scala3_home] on
 
 This project depends on the following external software for the **Microsoft Windows** platform:
 
-- [Git 2.45][git_downloads] ([*release notes*][git_relnotes])
+- [Git 2.51][git_downloads] ([*release notes*][git_relnotes])
 - [Scala 3][scala3_releases] ([*release notes*][scala3_relnotes])
 - [Temurin OpenJDK 17 LTS][temurin_openjdk17] <sup id="anchor_01">[1](#footnote_01)</sup> ([*release notes*][temurin_openjdk17_relnotes], [*bug fixes*][temurin_openjdk17_bugfixes], [Java 17 API][oracle_openjdk17_api])
 <!--
@@ -39,8 +39,8 @@ For instance our development environment looks as follows (*October 2025*):
 
 <pre style="font-size:80%;">
 C:\opt\Git\                     <i>(315 MB)</i>
-C:\opt\jdk-temurin-17.0.11_9\   <i>(302 MB)</i>
-C:\opt\scala3-3.3.3\            <i>( 57 MB)</i>
+C:\opt\jdk-temurin-17.0.16_8\   <i>(302 MB)</i>
+C:\opt\scala3-3.3.7\            <i>( 57 MB)</i>
 </pre>
 
 > **:mag_right:** [Git for Windows][git_downloads] provides a BASH emulation used to run [**`git`**][git_cli] from the command line (as well as over 250 Unix commands like [**`awk`**][man1_awk], [**`diff`**][man1_diff], [**`file`**][man1_file], [**`grep`**][man1_grep], [**`more`**][man1_more], [**`mv`**][man1_mv], [**`rmdir`**][man1_rmdir], [**`sed`**][man1_sed] and [**`wc`**][man1_wc]).
@@ -483,12 +483,12 @@ Support files for Java class sharing:
 </pre>
 
 <pre style="font-size:80%;">
-<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir">dir</a> /b c:\opt\scala3_3.3.3\lib\dotty-cds*</b>
+<b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir">dir</a> /b c:\opt\scala3_3.3.7\lib\dotty-cds*</b>
 dotty-cds-compiler.classlist
 dotty-cds-compiler.jsa
 dotty-cds-repl.classlist
 dotty-cds-repl.jsa
-dotty-cds_3-3.3.3.jar
+dotty-cds_3-3.3.7.jar
 </pre>
 
 <pre style="font-size:80%;">
@@ -574,12 +574,12 @@ Classes per package (888):
 > 3. Repeat command from point 1. 
 > 
 > <pre style="font-size:80%;">
-> <b>&gt; c:\opt\jdk-temurin-11.0.20_8\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html" rel="external">java</a> -version</b>
-> openjdk version "11.0.20" 2023-07-18
-> OpenJDK Runtime Environment Temurin-11.0.19+7 (build 11.0.19+7)
-> OpenJDK 64-Bit Server VM Temurin-11.0.19+7 (build 11.0.19+7, mixed mode)
+> <b>&gt; c:\opt\jdk-temurin-11.0.26_4\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html" rel="external">java</a> -version</b>
+> openjdk version "11.0.26" 2025-01-21
+> OpenJDK Runtime Environment Temurin-11.0.26+4 (build 11.0.26+4)
+> OpenJDK 64-Bit Server VM Temurin-11.0.26+4 (build 11.0.26+4, mixed mode)
 > &nbsp;
-> <b>&gt; c:\opt\jdk-temurin-11.0.17_8\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html" rel="external">java</a> -Xshare:dump</b>
+> <b>&gt; c:\opt\jdk-temurin-11.0.26_4\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html" rel="external">java</a> -Xshare:dump</b>
 > [...]
 > Number of classes 1272
 > [...]
@@ -590,11 +590,11 @@ Classes per package (888):
 > od  space:   6534648 [ 36.1% of total] [...]
 > total    :  17873816 [100.0% of total] [...]
 > &nbsp;
-> <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir">dir</a> /b c:\opt\jdk-temurin-11.0.20_8\bin\server</b>
+> <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir">dir</a> /b c:\opt\jdk-temurin-11.0.26_4\bin\server</b>
 > classes.jsa
 > jvm.dll
 > &nbsp;
-> <b>&gt; c:\opt\jdk-temurin-11.0.20_8\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html">java</a> -version</b>
+> <b>&gt; c:\opt\jdk-temurin-11.0.26_4\bin\<a href="https://docs.oracle.com/en/java/javase/11/tools/java.html">java</a> -version</b>
 > openjdk version "11.0.20" 2023-07-18
 > OpenJDK Runtime Environment Temurin-11.0.20+8 (build 11.0.20+8)
 > OpenJDK 64-Bit Server VM Temurin-11.0.20+8 (build 11.0.20+8, mixed mode, sharing)
@@ -745,7 +745,7 @@ We can observe that 24 classes could not be found in the Java shared archive **`
 [scala_downloads]: https://www.scala-lang.org/download/
 [scala3_home]: https://dotty.epfl.ch/
 [scala3_releases]: https://github.com/lampepfl/dotty/releases
-[scala3_relnotes]: https://github.com/lampepfl/dotty/releases/tag/3.3.3
+[scala3_relnotes]: https://github.com/lampepfl/dotty/releases/tag/3.3.7
 [dotty_tasty]: https://dotty.epfl.ch/docs/reference/metaprogramming/tasty-inspect.html
 [spark_examples]: https://github.com/michelou/spark-examples#top
 [spring_examples]: https://github.com/michelou/spring-examples#top

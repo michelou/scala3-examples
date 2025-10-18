@@ -18,10 +18,10 @@
         <!-- <dependency org="org.scala-lang" name="scala3-tasty-inspector_3" rev="3.3.7"/> -->
         <dependency org="org.scala-lang" name="tasty-core_3" rev="3.3.7"/>
         <dependency org="org.scala-lang" name="scaladoc_3" rev="3.3.7"/>
-        <dependency org="org.jline" name="jline-native" rev="3.27.1"/>
-        <dependency org="org.jline" name="jline-reader" rev="3.27.1"/>
-        <dependency org="org.jline" name="jline-terminal" rev="3.27.1"/>
-        <dependency org="org.jline" name="jline-terminal-jni" rev="3.27.1"/>
+        <dependency org="org.jline" name="jline-native" rev="3.29.0"/>
+        <dependency org="org.jline" name="jline-reader" rev="3.29.0"/>
+        <dependency org="org.jline" name="jline-terminal" rev="3.29.0"/>
+        <dependency org="org.jline" name="jline-terminal-jni" rev="3.29.0"/>
         <!-- see note on https://github.com/retronym/jline3#jansi-vs-jna -->
         <!-- <dependency org="net.java.dev.jna" name="jna" rev="5.15.0"/>  -->
         <dependency org="org.scala-lang" name="scala-library" rev="2.13.16"/>

@@ -10,22 +10,22 @@
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
         <dependency org="log4j" name="log4j" rev="1.2.17"/>
         
-        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala3-compiler_3.3.5-RC1 -->
-        <dependency org="org.scala-lang" name="scala3-compiler_3" rev="3.3.5-RC1"/>
-        <dependency org="org.scala-lang" name="scala3-interfaces" rev="3.3.5-RC1"/>
-        <dependency org="org.scala-lang" name="scala3-library_3" rev="3.3.5-RC1"/>
-        <dependency org="org.scala-lang" name="scala3-staging_3" rev="3.3.5-RC1"/>
-        <dependency org="org.scala-lang" name="scala3-tasty-inspector_3" rev="3.3.5-RC1"/>
-        <dependency org="org.scala-lang" name="tasty-core_3" rev="3.3.5-RC1"/>
-        <dependency org="org.scala-lang" name="scaladoc_3" rev="3.3.5-RC1"/>
-        <dependency org="org.jline" name="jline-native" rev="3.27.0"/>
-        <dependency org="org.jline" name="jline-reader" rev="3.27.0"/>
-        <dependency org="org.jline" name="jline-terminal" rev="3.27.0"/>
-        <dependency org="org.jline" name="jline-terminal-jna" rev="3.27.0"/>
+        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala3-compiler_3.3.7 -->
+        <dependency org="org.scala-lang" name="scala3-compiler_3" rev="3.3.7"/>
+        <dependency org="org.scala-lang" name="scala3-interfaces" rev="3.3.7"/>
+        <dependency org="org.scala-lang" name="scala3-library_3" rev="3.3.7"/>
+        <dependency org="org.scala-lang" name="scala3-staging_3" rev="3.3.7"/>
+        <dependency org="org.scala-lang" name="scala3-tasty-inspector_3" rev="3.3.7"/>
+        <dependency org="org.scala-lang" name="tasty-core_3" rev="3.3.7"/>
+        <dependency org="org.scala-lang" name="scaladoc_3" rev="3.3.7"/>
+        <dependency org="org.jline" name="jline-native" rev="3.29.0"/>
+        <dependency org="org.jline" name="jline-reader" rev="3.29.0"/>
+        <dependency org="org.jline" name="jline-terminal" rev="3.29.0"/>
+        <dependency org="org.jline" name="jline-terminal-jna" rev="3.29.0"/>
         <!-- see note on https://github.com/retronym/jline3#jansi-vs-jna -->
         <dependency org="net.java.dev.jna" name="jna" rev="5.15.0"/>
-        <dependency org="org.scala-lang" name="scala-library" rev="2.13.15"/>
-        <dependency org="org.scala-lang.modules" name="scala-asm" rev="9.7.0-scala-1"/>
+        <dependency org="org.scala-lang" name="scala-library" rev="2.13.16"/>
+        <dependency org="org.scala-lang.modules" name="scala-asm" rev="9.8.0-scala-1"/>
         <!--
         <dependency org="org.scala-lang.modules" name="scala-xml_3" rev="2.0.0"/>
         <dependency org="org.scala-sbt" name="compiler-interface" rev="1.2.5"/>
@@ -37,6 +37,6 @@
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency org="junit" name="junit" rev="4.13.2"/>
         <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-console-standalone -->
-        <dependency org="org.junit.platform" name="junit-platform-console-standalone" rev="1.11.4"/>
+        <dependency org="org.junit.platform" name="junit-platform-console-standalone" rev="1.14.0"/>
     </dependencies>
 </ivy-module>

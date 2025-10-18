@@ -1,4 +1,4 @@
-val scala3Version = "3.1.2-RC1"
+val scala3Version = "3.3.7"
 
 lazy val root = project
   .in(file("."))
@@ -15,7 +15,7 @@ lazy val root = project
     ),
     // resolvers += "Maven Central Server" at "http://central.maven.org/maven2",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-library" % "2.13.8",
-      "org.scala-lang" % "scala-reflect" % "2.13.8"
+      "org.scala-lang" % "scala-library" % "2.13.17",
+      "org.scala-lang" % "scala-reflect" % "2.13.17"
     )
   )

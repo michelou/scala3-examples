@@ -25,7 +25,7 @@ set "_TEMP_DIR=%TEMP%\lib"
 if not exist "%_TEMP_DIR%" mkdir "%_TEMP_DIR%"
 if %_DEBUG%==1 echo [%~n0] "_TEMP_DIR=%_TEMP_DIR%" 1>&2
 
-set _SCALA_VERSION=2.13.16
+set _SCALA_VERSION=2.13.17
 
 @rem #########################################################################
 @rem ## Libraries to be added to _LIBS_CPATH

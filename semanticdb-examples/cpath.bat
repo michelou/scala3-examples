@@ -27,7 +27,9 @@ if %_DEBUG%==1 echo [%~n0] "__TEMP_DIR=%__TEMP_DIR%" 1>&2
 
 set __SCALA_BINARY_VERSION=2.13
 
-set __SCALAMETA_VERSION=4.9.9
+set __SCALA_VERSION=2.13.17
+
+set __SCALAMETA_VERSION=4.14.0
 
 @rem #########################################################################
 @rem ## Libraries to be added to _LIBS_CPATH_SCALA
@@ -35,14 +37,14 @@ set __SCALAMETA_VERSION=4.9.9
 set _LIBS_CPATH=
 
 @rem https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
-call :add_jar "org.scala-lang" "scala-reflect" "2.13.12"
+call :add_jar "org.scala-lang" "scala-reflect" "%__SCALA_VERSION%"
 
 @rem https://mvnrepository.com/artifact/com.lihaoyi/fansi
 @rem dependency of pprint
-call :add_jar "com.lihaoyi" "fansi_%__SCALA_BINARY_VERSION%" "0.4.0"
+call :add_jar "com.lihaoyi" "fansi_%__SCALA_BINARY_VERSION%" "0.5.1"
 
 @rem https://mvnrepository.com/artifact/com.lihaoyi/pprint
-call :add_jar "com.lihaoyi" "pprint_%__SCALA_BINARY_VERSION%" "0.8.1"
+call :add_jar "com.lihaoyi" "pprint_%__SCALA_BINARY_VERSION%" "0.9.4"
 
 @rem https://mvnrepository.com/artifact/org.scalameta/common
 call :add_jar "org.scalameta" "common_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VERSION%"
@@ -51,7 +53,7 @@ call :add_jar "org.scalameta" "common_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VE
 call :add_jar "org.scalameta" "scalameta_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VERSION%"
 
 @rem https://mvnrepository.com/artifact/org.scalameta/semanticdb-scalac
-call :add_jar "org.scalameta" "semanticdb-scalac_2.13.13" "%__SCALAMETA_VERSION%"
+call :add_jar "org.scalameta" "semanticdb-scalac_%__SCALA_VERSION%" "%__SCALAMETA_VERSION%"
 
 set "__LIBS_CPATH_SCALA=%_LIBS_CPATH%"
 
@@ -67,7 +69,7 @@ call :add_jar "org.scalameta" "common_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VE
 call :add_jar "org.scalameta" "scalameta_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VERSION%"
 
 @rem https://mvnrepository.com/artifact/com.sourcegraph/semanticdb-javac
-call :add_jar "com.sourcegraph" "semanticdb-javac" "0.9.9"
+call :add_jar "com.sourcegraph" "semanticdb-javac" "0.11.1"
 
 set "__LIBS_CPATH_JAVA=%_LIBS_CPATH%"
 
@@ -83,7 +85,7 @@ call :add_jar "org.scalameta" "common_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VE
 call :add_jar "org.scalameta" "scalameta_%__SCALA_BINARY_VERSION%" "%__SCALAMETA_VERSION%"
 
 @rem https://mvnrepository.com/artifact/com.sourcegraph/semanticdb-kotlinc
-call :add_jar "com.sourcegraph" "semanticdb-kotlinc" "0.4.0"
+call :add_jar "com.sourcegraph" "semanticdb-kotlinc" "0.6.0"
 
 set "__LIBS_CPATH_KOTLIN=%_LIBS_CPATH%"
 

@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2018-2024 Stéphane Micheloud
+## Copyright (c) 2018-2025 Stéphane Micheloud
 ##
 ## Licensed under the MIT License.
 ##

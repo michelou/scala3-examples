@@ -24,8 +24,8 @@ This document is part of a series of topics related to [Scala 3][scala3_home] on
 
 Our [Dotty fork][github_dotty_fork] depends on the following external software for the **Microsoft Windows** platform:
 
-- [Git 2.46][git_releases] ([*release notes*][git_relnotes])
-- [sbt 1.10][sbt_releases] (requires Java 8) ([*release notes*][sbt_relnotes])
+- [Git 2.51][git_releases] ([*release notes*][git_relnotes])
+- [sbt 1.11][sbt_releases] (requires Java 8) ([*release notes*][sbt_relnotes])
 - [Temurin OpenJDK 11][openjdk_releases] <sup id="anchor_02">[2](#footnote_02)</sup> ([*release notes*][openjdk_relnotes])
 <!--
 8u212   -> https://mail.openjdk.java.net/pipermail/jdk8u-dev/2019-April/009115.html
@@ -55,9 +55,9 @@ For instance our development environment looks as follows (*October 2025*):
 
 <pre style="font-size:80%;">
 C:\opt\Git\                        <i>(388 MB)</i>
-C:\opt\jdk-temurin-1.8.0u412-b08\  <i>(189 MB)</i>
-C:\opt\jdk-temurin-11.0.24_8\      <i>(303 MB)</i>
-C:\opt\jdk-temurin-17.0.12_7\      <i>(301 MB)</i>
+C:\opt\jdk-temurin-1.8.0u422-b06\  <i>(189 MB)</i>
+C:\opt\jdk-temurin-11.0.26_4\      <i>(303 MB)</i>
+C:\opt\jdk-temurin-17.0.16_8\      <i>(301 MB)</i>
 C:\opt\sbt\                        <i>(137 MB)</i>
 </pre>
 
@@ -255,7 +255,7 @@ Command **`build -verbose clean`** also displays the tool paths/options and the 
 <b>&gt; <a href="bin/dotty/build.bat">build</a> -verbose clean</b>
 Tool paths
    "GIT_CMD=C:\opt\Git\bin\git.exe"
-   "JAVA_CMD=C:\opt\jdk-openjdk-11.0.23_9\bin\java.exe"
+   "JAVA_CMD=C:\opt\jdk-openjdk-11.0.26_4\bin\java.exe"
    "SBT_CMD=C:\opt\sbt\bin\sbt.bat"
 Tool options
    JAVA_OPTS=-Xmx2048m -XX:ReservedCodeCacheSize=2048m -XX:MaxMetaspaceSize=1024m
@@ -462,7 +462,7 @@ Command [**`project\scripts\bootstrapCmdTests.bat`**](bin/dotty/project/scripts/
 [info] Updating dotty-bench...
 [...]
 [info] Running (fork) dotty.tools.benchmarks.Bench 1 1 tests/pos/alias.scala
-# JMH version: 1.35
+# JMH version: 1.37
 # VM version: JDK 11.0.18, VM 11.0.18+10
 # VM invoker: C:\opt\jdk-temurin-11.0.20_8\bin\java.exe
 # VM options: -Xms2G -Xmx2G
@@ -492,7 +492,7 @@ Worker.compile  avgt       533.625          ms/op
 [info] Updating dotty-bench-bootstrapped...
 [...]
 [info] Running (fork) dotty.tools.benchmarks.Bench 1 1 tests/pos/alias.scala
-# JMH version: 1.35
+# JMH version: 1.37
 # VM version: JDK 11.0.18, VM 11.0.18+10
 # VM invoker: C:\opt\jdk-temurin-11.0.20_8\bin\java.exe
 # VM options: -Xms2G -Xmx2G
@@ -520,7 +520,7 @@ Worker.compile  avgt       361.619          ms/op
 [success] Total time: 21 s, completed 3 déc. 2018 09:44:42
 [...]
 [info] Running (fork) dotty.tools.benchmarks.Bench 1 1 -with-compiler compiler/src/dotty/tools/dotc/core/Types.scala
-# JMH version: 1.35
+# JMH version: 1.37
 # VM version: JDK 11.0.18, VM 11.0.18+10
 # VM invoker: C:\opt\jdk-temurin-11.0.20_8\bin\java.exe
 # VM options: -Xms2G -Xmx2G
