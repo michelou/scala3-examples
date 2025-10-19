@@ -19,7 +19,7 @@ This document is part of a series of topics related to [Scala 3][scala3_home] on
 - [Data Sharing and Scala 3 on Windows](CDS.md)
 - [OpenJDK and Scala 3 on Windows](OPENJDK.md)
 
-[Ada][ada_examples], [Akka][akka_examples], [C++][cpp_examples], [COBOL][cobol_examples], [Dafny][dafny_examples], [Dart][dart_examples], [Deno][deno_examples], [Docker][docker_examples], [Erlang][erlang_examples], [Flix][flix_examples], [Go][golang_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kafka][kafka_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Modula-2][m2_examples], [Node.js][nodejs_examples], [Rust][rust_examples], [Spark][spark_examples], [Spring][spring_examples], [Standard&nbsp;ML][sml_examples], [TruffleSqueak][trufflesqueak_examples], [WiX Toolset][wix_examples] and [Zig][zig_examples] are other topics we are continuously monitoring.
+[Ada][ada_examples], [Akka][akka_examples], [C++][cpp_examples], [COBOL][cobol_examples], [Component Pascal][cp_examples], [Dafny][dafny_examples], [Dart][dart_examples], [Deno][deno_examples], [Docker][docker_examples], [Erlang][erlang_examples], [Flix][flix_examples], [Go][golang_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kafka][kafka_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Modula-2][m2_examples], [Node.js][nodejs_examples], [Rust][rust_examples], [Spark][spark_examples], [Spring][spring_examples], [Standard&nbsp;ML][sml_examples], [TruffleSqueak][trufflesqueak_examples], [WiX Toolset][wix_examples] and [Zig][zig_examples] are other topics we are continuously monitoring.
 
 ## <span id="proj_deps">Project dependencies</span>
 
@@ -43,12 +43,12 @@ Optionally one may also install the following software:
 - [JavaFX 17 LTS][javafx17_downloads] ([*release notes*][javafx17_relnotes])
 - [JavaFX 21 LTS][javafx21_downloads] ([*release notes*][javafx21_relnotes])
 - [JITWatch 1.4][jitwatch_releases] (requires Java 11+)
-- [Mill 0.12][mill_releases] ([*change log*][mill_changelog])
+- [Mill 1.0][mill_releases] <sup id="anchor_05">[5](#footnote_05)</sup>  ([*change log*][mill_changelog])
 - [MSYS2 2024][msys2_releases] ([*change log*][msys2_changelog])
-- [sbt 1.10][sbt_downloads] (requires Java 8+) ([*release notes*][sbt_relnotes])
+- [sbt 1.11][sbt_downloads] (requires Java 8+) ([*release notes*][sbt_relnotes])
 - [Scala 2.13][scala_releases] (requires Java 8+) ([*release notes*][scala_relnotes], [*Scala API*][scala_api])
 - [Scala 2.13 DEV][scala_snapshots]
-- [Scala 3.7 Next][scala3_next_releases] <sup id="anchor_05">[5](#footnote_05)</sup> ([*release notes*][scala3_next_relnotes])
+- [Scala 3.7 Next][scala3_next_releases] <sup id="anchor_06">[6](#footnote_06)</sup> ([*release notes*][scala3_next_relnotes])
 - [scala-cli 1.9][scala_cli_downloads] ([*release notes*][scala_cli_relnotes])
 - [Temurin OpenJDK 21 LTS][temurin_openjdk21] <sup id="anchor_02">[2](#footnote_02)</sup> ([*release notes*][temurin_openjdk21_relnotes], [*Java 21 API*][oracle_openjdk21_api])
 - [Visual Studio Code 1.105][vscode_downloads] ([*release notes*][vscode_relnotes])
@@ -308,21 +308,21 @@ We distinguish different sets of batch/bash commands:
     public final class myexamples.Main {
       public static void main(java.lang.String[]);
         Code:
-           0: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.getstatic">getstatic</a>     #13                 // Field myexamples/Main$.MODULE$:Lmyexamples/Main$;
+           0: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.getstatic">getstatic</a>     #13                 <span style="color:green;">// Field myexamples/Main$.MODULE$:Lmyexamples/Main$;</span>
            3: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.aload_n">aload_0</a>
-           4: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.invokevirtual">invokevirtual</a> #15                 // Method myexamples/Main$.main:([Ljava/lang/String;)V
+           4: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.invokevirtual">invokevirtual</a> #15                 <span style="color:green;">// Method myexamples/Main$.main:([Ljava/lang/String;)V</span>
            7: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.return">return</a>
     
       public static void test02();
         Code:
-           0: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.getstatic">getstatic</a>     #13                 // Field myexamples/Main$.MODULE$:Lmyexamples/Main$;
-           3: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.invokevirtual">invokevirtual</a> #19                 // Method myexamples/Main$.test02:()V
+           0: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.getstatic">getstatic</a>     #13                 <span style="color:green;">// Field myexamples/Main$.MODULE$:Lmyexamples/Main$;</span>
+           3: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.invokevirtual">invokevirtual</a> #19                 <span style="color:green;">// Method myexamples/Main$.test02:()V</span>
            6: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.return">return</a>
     
       public static void test01();
         Code:
-           0: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.getstatic">getstatic</a>     #13                 // Field myexamples/Main$.MODULE$:Lmyexamples/Main$;
-           3: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.invokevirtual">invokevirtual</a> #22                 // Method myexamples/Main$.test01:()V
+           0: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.getstatic">getstatic</a>     #13                 <span style="color:green;">// Field myexamples/Main$.MODULE$:Lmyexamples/Main$;</span>
+           3: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.invokevirtual">invokevirtual</a> #22                 <span style="color:green;">// Method myexamples/Main$.test01:()V</span>
            6: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-6.html#jvms-6.5.return">return</a>
     }
     </pre>
@@ -338,8 +338,8 @@ We execute command [**`setenv.bat`**](setenv.bat) once to setup our development 
 Tool versions:
    javac 17.0.16, scalac 2.13.17, scalac 3.3.7, scalafmt 3.7.17,
    ant 1.10.15, gradle 9.1.0, mvn 3.9.11, sbt 1.11.7, scala-cli 1.9.1,
-   mill 0.12.9, bazel 8.4.2, cfr 0.152, make 4.4.1, python 3.11.1,
-   jacoco 0.8.14, git 2.51.0, diff 3.12, bash 5.2.37(1)
+   mill 1.0.6, bazel 8.4.2, cfr 0.152, make 4.4.1, python 3.11.1,
+   jacoco 0.8.14, git 2.51.1, diff 3.12, bash 5.2.37(1)
 
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where_1" rel="external">where</a> sbt scala-cli</b>
 C:\opt\sbt\bin\sbt
@@ -367,8 +367,8 @@ Command [**`setenv.bat -verbose`**](setenv.bat) also prints the tool paths and d
 Tool versions:
    javac 17.0.16, scalac 2.13.17, scalac 3.3.7, scalafmt 3.7.12,
    ant 1.10.15, gradle 9.1.0, mvn 3.9.11, sbt 1.11.7, scala-cli 1.9.1,
-   mill 0.12.9, bazel 8.4.2, cfr 0.152, make 3.81, python 3.11.1,
-   jacoco 0.8.14, git 2.51.0, diff 3.12, bash 5.2.37(1)
+   mill 1.0.6, bazel 8.4.2, cfr 0.152, make 3.81, python 3.11.1,
+   jacoco 0.8.14, git 2.51.1, diff 3.12, bash 5.2.37(1)
 Tool paths:
    C:\opt\jdk-temurin-11.0.21_9\bin\javac.exe
    C:\opt\scala-2.13.17\bin\scalac.bat
@@ -919,14 +919,36 @@ For instance, for Visual Studio 2019, we set variable <b><code>BAZEL_VC</code></
 
 <!--======================================================================-->
 
-<span id="footnote_05">[5]</span> ***Scala 3 Next*** [↩](#anchor_05) <!-- 2024-09-07 -->
+<span id="footnote_05">[5]</span> ***Updating Mill*** [↩](#anchor_05) <!-- 2025-10-19 -->
 
 <dl><dd>
-The attentive Scala 3 user will have noticed that the size of the <a href="">Scala 3</a> software distribution has increased significantly with <a href="https://github.com/scala/scala3/releases/tag/3.5.0" rel="external">version 3.5.0</a>.
+Given the following <a href="">Mill</a> installation directory :
+<pre style="font-size:80%;">
+<b>&gt; <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/dir" rel="external">dir</a> /b /s c:\opt\mill</b>
+c:\opt\mill\mill.bat
+&nbsp;
+<b>&gt; <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/findstr" rel="external">findstr</a> Script c:\opt\mill\mill.bat</b>
+rem Script Version: 1.0.6
+</pre>
+we download the batch file <a href="https://repo1.maven.org/maven2/com/lihaoyi/mill-dist/1.0.6/mill-dist-1.0.6-mill.bat"><code>mill-dist-1.0.6-mill.bat</code></a> from the following
+<a href="https://repo1.maven.org/maven2/com/lihaoyi/mill-dist/1.0.6/">1.0.6 distribution page</a>, rename it and overwrite our local file <code>mill.bat</code>.
+<pre style="font-size:80%;">
+<b>&gt; <a href="https://mill-build.org/mill/cli/flags.html" rel="external">mill</a> --version | <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/findstr" rel="external">findstr</a> Mill</b>
+Mill Build Tool version 1.0.6
+</pre>
+</dd></dl>
+
+<!--======================================================================-->
+
+<span id="footnote_06">[6]</span> ***Scala 3 Next*** [↩](#anchor_06) <!-- 2024-09-07 -->
+
+<dl><dd>
+The attentive Scala 3 user will have noticed that the size of the <a href="">Scala 3</a> software distribution has increased significantly with versions <a href="https://github.com/scala/scala3/releases/tag/3.5.0" rel="external">3.5.0</a> and newer.
 <table>
-<tr><th>Scala 3 Version</th><th>Archive&nbsp;size</th><th>Installation&nbsp;size</th></tr>
+<tr><th>Scala 3 Version</th><th>TGZ Archive&nbsp;size</th><th>Installation&nbsp;size</th></tr>
 <tr><td>3.3.7&nbsp;LTS</td><td>36 MB</td><td>38.8 MB</td></tr>
-<tr><td>3.5.0&nbsp;Next</td><td>70 MB</td><td style="color:red;">131 MB</td></tr>
+<tr><td><a href="https://github.com/scala/scala3/releases/tag/3.5.0">3.5.0&nbsp;Next</a</td><td>70 MB</td><td style="color:red;">131 MB</td></tr>
+<tr><td><a href="https://github.com/scala/scala3/releases/tag/3.7.0">3.7.0&nbsp;Next</a></td><td>73 MB</td><td style="color:red;">153 MB</td></tr>
 </table>
 That size increase of the Scala 3 software distribution comes from a big reorganization of its contents :
 <ul>
@@ -963,7 +985,7 @@ In our case we downloaded the following installation files (<a href="#proj_deps"
 </dd>
 <dd>
 <pre style="font-size:80%;">
-<a href="https://github.com/lihaoyi/mill/releases">0.12.9-assembly</a> (mill)                             <i>( 64 MB)</i>
+<strike><a href="https://github.com/lihaoyi/mill/releases">0.12.9-assembly</a> (mill)</strike> <i style="color:darkred;">(see <a href="#footnote_05">Footnote 5</a>)</i>            <strike><i>( 64 MB)</i></strike>
 <a href="https://ant.apache.org/bindownload.cgi">apache-ant-1.10.15-bin.zip</a>                         <i>(  9 MB)</i>
 <a href="https://maven.apache.org/download.cgi">apache-maven-3.9.11-bin.zip</a>                        <i>( 10 MB)</i>
 <a href="https://github.com/bazelbuild/bazel/releases">bazel-8.4.2-windows-x86_64.zip</a>                     <i>( 40 MB)</i>
@@ -978,7 +1000,7 @@ In our case we downloaded the following installation files (<a href="#proj_deps"
 <a href="https://gluonhq.com/products/javafx/">openjfx-17.0.14_windows-x64_bin-jmods.zip</a>          <i>( 37 MB)</i>
 <a href="https://gluonhq.com/products/javafx/">openjfx-21.0.6_windows-x64_bin-sdk.zip</a>             <i>( 39 MB)</i>
 <a href="https://gluonhq.com/products/javafx/">openjfx-21.0.6_windows-x64_bin-jmods.zip</a>           <i>( 37 MB)</i>
-<a href="https://git-scm.com/download/win">PortableGit-2.51.0-64-bit.7z.exe</a>                   <i>( 60 MB)</i>
+<a href="https://git-scm.com/download/win">PortableGit-2.51.1-64-bit.7z.exe</a>                   <i>( 60 MB)</i>
 <a href="https://github.com/sbt/sbt/releases" rel="external">sbt-1.11.7.zip</a>                                     <i>( 17 MB)</i>
 <a href="https://www.scala-lang.org/files/archive/" rel="external">scala-2.13.17.zip</a>                                  <i>( 22 MB)</i>
 <a href="https://github.com/VirtusLab/scala-cli/releases" rel="external">scala-cli-x86_64-pc-win32.zip</a>                      <i>( 31 MB)</i>
@@ -1036,6 +1058,7 @@ Command Prompt has been around for as long as we can remember, but starting with
 [cfr_releases]: https://www.benf.org/other/cfr/
 [cmd_cli]: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmd
 [cobol_examples]: https://github.com/michelou/cobol-examples#top
+[cp_examples]: https://github.com/michelou/cp-examples#top
 [cpp_examples]: https://github.com/michelou/cpp-examples#top
 [dafny_examples]: https://github.com/michelou/dafny-examples#top
 [dart_examples]: https://github.com/michelou/dart-examples#top
@@ -1050,7 +1073,7 @@ Command Prompt has been around for as long as we can remember, but starting with
 [git_bash]: https://www.atlassian.com/git/tutorials/git-bash
 [git_cli]: https://git-scm.com/docs/git
 [git_releases]: https://git-scm.com/download/win
-[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.51.0.txt
+[git_relnotes]: https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.51.1.adoc
 [github_guides]: https://guides.github.com/
 [github_scala_scala3]: https://github.com/scala/scala3
 [github_markdown]: https://github.github.com/gfm/
@@ -1093,7 +1116,7 @@ Command Prompt has been around for as long as we can remember, but starting with
 [maven_lamp]: https://search.maven.org/search?q=g:ch.epfl.lamp
 [microsoft_powershell]: https://docs.microsoft.com/en-us/powershell/scripting/getting-started/getting-started-with-windows-powershell?view=powershell-6
 [microsoft_vscode]: https://code.visualstudio.com/
-[mill_changelog]: https://github.com/com-lihaoyi/mill/releases/tag/0.12.9
+[mill_changelog]: https://github.com/com-lihaoyi/mill/blob/main/changelog.adoc
 [mill_cli]: https://com-lihaoyi.github.io/mill/#command-line-tools
 [mill_releases]: https://github.com/lihaoyi/mill/releases/
 [msys2_changelog]: https://github.com/msys2/setup-msys2/blob/master/CHANGELOG.md
@@ -1187,10 +1210,11 @@ Command Prompt has been around for as long as we can remember, but starting with
 17.0.15 -> https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-April/043307.html
 17.0.16 -> https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-July/045614.html
 -->
-[temurin_openjdk17]: https://adoptium.net/releases.html?variant=openjdk17&jvmVariant=hotspot
-[temurin_openjdk17_bugfixes]: https://www.oracle.com/java/technologies/javase/17-0-14-relnotes.html
-[temurin_openjdk17_relnotes]: https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-January/040827.html
+[temurin_openjdk17]: https://adoptium.net/temurin/releases?version=17&os=windows&arch=x64&jvmVariant=hotspot
+[temurin_openjdk17_bugfixes]: https://www.oracle.com/java/technologies/javase/17-0-16-relnotes.html
+[temurin_openjdk17_relnotes]: https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-July/045614.html
 <!--
+See also https://wiki.openjdk.org/display/JDKUpdates/Archived+Releases
 21_35   -> https://adoptium.net/fr/temurin/release-notes/?version=jdk-21+35
 21.0.1  -> https://mail.openjdk.org/pipermail/jdk-updates-dev/2023-October/026351.html
 21.0.2  -> https://mail.openjdk.org/pipermail/jdk-updates-dev/2024-January/029090.html
@@ -1201,9 +1225,13 @@ Command Prompt has been around for as long as we can remember, but starting with
 21.0.7  -> https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-April/043308.html
 21.0.8  -> https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-July/045617.html
 -->
-[temurin_openjdk21]: https://adoptium.net/releases.html?variant=openjdk21&jvmVariant=hotspot
+[temurin_openjdk21]: https://adoptium.net/temurin/releases?version=21&os=windows&arch=x64&jvmVariant=hotspot
 [temurin_openjdk21_bugfixes]: https://www.oracle.com/java/technologies/javase/21-0-6-relnotes.html
 [temurin_openjdk21_relnotes]: https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-January/040828.html
+<!--
+-->
+[temurin_openjdk25]: https://adoptium.net/temurin/releases?version=25&os=windows&arch=x64&jvmVariant=hotspot
+[temurin_openjdk25_relnotes]: https://jdk.java.net/25/release-notes
 <!--
 [python_changelog]: https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-0-final
 [python_release]: https://www.python.org/downloads/release/python-380/
