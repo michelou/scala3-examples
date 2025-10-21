@@ -19,7 +19,7 @@ This document is part of a series of topics related to [Scala 3][scala3_home] on
 - [Data Sharing and Scala 3 on Windows](CDS.md)
 - [OpenJDK and Scala 3 on Windows](OPENJDK.md)
 
-[Ada][ada_examples], [Akka][akka_examples], [C++][cpp_examples], [COBOL][cobol_examples], [Component Pascal][cpascal_examples], [Dafny][dafny_examples], [Dart][dart_examples], [Deno][deno_examples], [Docker][docker_examples], [Erlang][erlang_examples], [Flix][flix_examples], [Go][golang_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kafka][kafka_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Modula-2][m2_examples], [Node.js][nodejs_examples], [Rust][rust_examples], [Spark][spark_examples], [Spring][spring_examples], [Standard&nbsp;ML][sml_examples], [TruffleSqueak][trufflesqueak_examples], [WiX Toolset][wix_examples] and [Zig][zig_examples] are other topics we are continuously monitoring.
+[Ada][ada_examples], [Akka][akka_examples], [C++][cpp_examples], [COBOL][cobol_examples], [Component Pascal][component_pascal_examples], [Dafny][dafny_examples], [Dart][dart_examples], [Deno][deno_examples], [Docker][docker_examples], [Erlang][erlang_examples], [Flix][flix_examples], [Go][golang_examples], [GraalVM][graalvm_examples], [Haskell][haskell_examples], [Kafka][kafka_examples], [Kotlin][kotlin_examples], [LLVM][llvm_examples], [Modula-2][m2_examples], [Node.js][nodejs_examples], [Rust][rust_examples], [Spark][spark_examples], [Spring][spring_examples], [Standard&nbsp;ML][sml_examples], [TruffleSqueak][trufflesqueak_examples], [WiX Toolset][wix_examples] and [Zig][zig_examples] are other topics we are continuously monitoring.
 
 ## <span id="proj_deps">Project dependencies</span>
 
@@ -462,39 +462,41 @@ Command [**`getnightly.bat download`**](bin/getnightly.bat) with options **` -ve
 <b>&gt; <a href="bin/getnightly.bat">getnightly</a> -verbose download</b>
 Delete directory "out\nightly"
 Download Scala 3 nightly files from Maven repository
-Downloading file scala3-language-server_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 148.9 Kb
-Downloading file scala3-compiler_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 20.3 Mb
-Downloading file scala3-sbt-bridge-3.5.0-RC1-bin-20240514-7c9aae3-NIGHTLY.jar ... 31.2 Kb
-Downloading file scala3-tasty-inspector_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 17.4 Kb
-Downloading file scala3-library_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 1.2 Mb
-Downloading file scala2-library-tasty-experimental_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 3 Mb
-Downloading file scala3-staging_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 40.7 Kb
-Downloading file scala3-presentation-compiler_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 1.7 Mb
-Downloading file scala3-library_sjs1_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 1.9 Mb
-Downloading file scala3-interfaces-3.5.0-RC1-bin-20240514-7c9aae3-NIGHTLY.jar ... 3.9 Kb
-Downloading file scala2-library-cc-tasty-experimental_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 3 Mb
-Downloading file scaladoc_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 4.7 Mb
-Downloading file tasty-core_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar ... 94.5 Kb
+Downloading file scaladoc_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 4.7 Mb
+Downloading file scala2-library-tasty-experimental_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 3 Mb
+Downloading file scala3-library_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 1.2 Mb
+Downloading file scala3-interfaces-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 3.9 Kb
+Downloading file scala3-compiler_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 21.9 Mb
+Downloading file scala3-presentation-compiler_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 2 Mb
+Downloading file scala3-staging_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 41 Kb
+Downloading file scala3-language-server_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 149.6 Kb
+Downloading file tasty-core_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 94.7 Kb
+Downloading file scala3-library_sjs1_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 2 Mb
+Downloading file scala2-library-cc-tasty-experimental_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 3.1 Mb
+Downloading file scala3-tasty-inspector_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 17.4 Kb
+Downloading file scala3-sbt-bridge-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar ... 31.2 Kb
 Downloading file antlr4-runtime-4.7.2.jar ... 330 Kb
+Downloading file autolink-0.6.0.jar ... 15.7 Kb
+Downloading file compiler-interface-1.9.6.jar ... 110.4 Kb
 [...]
-Downloading file common ... 6 Kb
-Downloading file common.bat ... 2.9 Kb
+Downloading file common ... 0 Kb
+Downloading file common.bat ... 0 Kb
 Converting file common.bat to DOS format
-Downloading file scala ... 1.8 Kb
-Downloading file scala.bat ... 2.6 Kb
+Downloading file scala ... 1.6 Kb
+Downloading file scala.bat ... 1.7 Kb
 Converting file scala.bat to DOS format
-Downloading file scalac ... 2.5 Kb
-Downloading file scalac.bat ... 3.7 Kb
+Downloading file scalac ... 2.6 Kb
+Downloading file scalac.bat ... 3 Kb
 Converting file scalac.bat to DOS format
-Downloading file scaladoc ... 5 Kb
-Downloading file scaladoc.bat ... 4.6 Kb
+Downloading file scaladoc ... 2 Kb
+Downloading file scaladoc.bat ... 2.6 Kb
 Converting file scaladoc.bat to DOS format
-Finished to download 54 files to directory "%LOCALAPPDATA%\Temp\scala3-nightly"
-Retrieve revision for hash "3e105f2" from GitHub repository "scala/scala3"
+Finished to download 57 files to directory "%LOCALAPPDATA%\Temp\scala3-nightly"
+Retrieve revision for hash "457a463" from GitHub repository "lampepfl/dotty"
 File "%LOCALAPPDATA%\Temp\scala3-nightly\VERSION":
-version:=3.6.2-RC1-bin-20240514-7c9aae3-NIGHTLY
-revision:=7c9aae3
-buildTime:=2024-05-15 23:09:19+02:00
+version:=3.7.2-RC1-bin-20250528-457a463-NIGHTLY
+revision:=457a463
+buildTime:=2025-10-21 20:45:40+02:00
 </pre>
 
 Output directory **`%TEMP%\scala3-nightly\`** contains the two subdirectories **`bin\`** and **`lib\`**:
@@ -512,23 +514,23 @@ scaladoc.bat
 antlr-runtime-4.7.2.jar
 autolink-0.6.0.jar
 [...]
-scala-asm-9.7.0-scala-1.jar
-scala-library-2.13.15.jar
-scala2-library-cc-tasty-experimental_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala2-library-tasty-experimental_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-compiler_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-interfaces-3.5.0-RC1-bin-20240514-7c9aae3-NIGHTLY.jar
-scala3-language-server_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-library_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-library_sjs1_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-presentation-compiler_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-sbt-bridge-3.6.2-RC1-bin-20240514-7c9aae3-NIGHTLY.jar
-scala3-staging_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scala3-tasty-inspector_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
-scaladoc_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
+scala-asm-9.6.0-scala-1.jar
+scala-library-2.13.12.jar
+scala2-library-cc-tasty-experimental_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala2-library-tasty-experimental_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-compiler_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-interfaces-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-language-server_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-library_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-library_sjs1_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-presentation-compiler_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-sbt-bridge-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-staging_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scala3-tasty-inspector_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
+scaladoc_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
 snakeyaml-2.0.jar
 strftime4j-1.0.6.jar
-tasty-core_3.6.2-RC1-bin-20241025-91ef921-NIGHTLY.jar
+tasty-core_3-3.7.2-RC1-bin-20250528-457a463-NIGHTLY.jar
 </pre>
 <!--
 > **:mag_right:** A few notes about the distributed Java archives:
@@ -541,10 +543,10 @@ Concretely, subcommand **`activate`** switches to the nightly build version and 
 
 <pre style="font-size:80%;">
 <b>&gt; <a href="bin/getnightly.bat">getnightly</a> activate</b>
-Active Scala 3 installation is 3.6.2-RC1-bin-20241025-91ef921-NIGHTLY (was 3.3.7)
+Active Scala 3 installation is 3.7.2-RC1-bin-20250528-457a463-NIGHTLY (was 3.3.7)
 
 <b>&gt; %SCALA3_HOME%\bin\<a href="bin/3.0/scalac.bat">scalac</a> -version</b>
-Scala compiler version 3.6.2-RC1 -- Copyright 2002-2024, LAMP/EPFL
+Scala compiler version 3.7.2-RC1 -- Copyright 2002-2025, LAMP/EPFL
 
 <b>&gt; <a href="bin/getnightly.bat">getnightly</a> restore</b>
 Active Scala 3 installation is 3.3.7
@@ -1058,7 +1060,7 @@ Command Prompt has been around for as long as we can remember, but starting with
 [cfr_releases]: https://www.benf.org/other/cfr/
 [cmd_cli]: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmd
 [cobol_examples]: https://github.com/michelou/cobol-examples#top
-[cpascal_examples]: https://github.com/michelou/cpascal-examples#top
+[component_pascal_examples]: https://github.com/michelou/component-pascal-examples#top
 [cpp_examples]: https://github.com/michelou/cpp-examples#top
 [dafny_examples]: https://github.com/michelou/dafny-examples#top
 [dart_examples]: https://github.com/michelou/dart-examples#top
