@@ -8,3 +8,7 @@ version = "$appVersion"
 description = """Gradle example project to build/run Scala 3 applications"""
 
 apply from: "../common.gradle"
+
+run.doFirst {
+    args ""
+}

@@ -13,8 +13,9 @@
 
 <!-- see https://github.com/orgs/marp-team/discussions/217 -->
 <style scoped>table { font-size: 80%; }</style>
-
+<!--
 ## <span id="intro">Introduction</span>
+-->
 
 The [Scala 3](https://www.scala-lang.org/download/scala3.html) and [Scala 2](https://www.scala-lang.org/download/scala2.html) software distributions differ in several ways regarding their dependencies on external libraries. We enumerate here the main differences :
 - Scala 3 depends on *many more* external libraries, introduced mainly with the new development of [`scaladoc`](https://docs.scala-lang.org/scala3/scaladoc.html).
@@ -22,37 +23,53 @@ The [Scala 3](https://www.scala-lang.org/download/scala3.html) and [Scala 2](htt
 - Scala 3 depends on [`scala-library`](https://mvnrepository.com/artifact/org.scala-lang/scala-library), the Scala 2.13 standard library (mainly for compatibility with the [Scala 2 collection framework](https://docs.scala-lang.org/overviews/collections-2.13/introduction.html)).
 - Dependencies *common* to both software distributions include [`jline`](https://github.com/jline/jline3#jline----) ([Scala REPL](https://docs.scala-lang.org/scala3/book/taste-repl.html)) and [`scala-asm`](https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm) ([JVM backend](https://dotty.epfl.ch/docs/internals/backend.html)).
 
-> **:mag_right:** We observe a jump in the increases in size of the software distributions : 
-> |  Scala 3  | Release&nbsp;date | Zip&nbsp;archive | Installation |
-> |:----------|:------------:|:-----------:|:------------:|
-> | [**3.4.2**](https://github.com/scala/scala3/releases/tag/3.4.2) | May&nbsp;2024 | 37.3 MB | 29.4 MB |
-> | [3.4.1](https://github.com/scala/scala3/releases/tag/3.4.1)     | Mar&nbsp;2024 | 36.6 MB | |
-> | [3.4.0](https://github.com/scala/scala3/releases/tag/3.4.0)     | Feb&nbsp;2024 | 36.5 MB | |
-> | [3.3.3](https://github.com/scala/scala3/releases/tag/3.3.3)     | Feb&nbsp;2024 | 35.5 MB | 37.5 MB|
-> | [3.3.1](https://github.com/lampepfl/dotty/releases/tag/3.3.1)   | Sep&nbsp;2023 | 36.6 MB | 38.7 MB |
-> | [3.3.0](https://github.com/lampepfl/dotty/releases/tag/3.3.0)   | May&nbsp;2023 | 36.0 MB | 38.1 MB |
-> | [3.2.2](https://github.com/lampepfl/dotty/releases/tag/3.2.2)   | Jan&nbsp;2023 | 35.5 MB | 37.6 MB |
-> | [3.2.1](https://github.com/lampepfl/dotty/releases/tag/3.2.1)   | Sep&nbsp;2022 | 35.5 MB | 37.6 MB |
-> | [3.2.0](https://github.com/lampepfl/dotty/releases/tag/3.2.0)   | Sep&nbsp;2022 | 34.2 MB | 36.1 MB |
-> | [3.1.3](https://github.com/lampepfl/dotty/releases/tag/3.1.3)   | Jun&nbsp;2022 | 33.8 MB | 35.7 MB |
-> | [3.1.2](https://github.com/lampepfl/dotty/releases/tag/3.1.2)   | Apr&nbsp;2022 | 33.4 MB | 35.3 MB |
-> | [3.1.1](https://github.com/lampepfl/dotty/releases/tag/3.1.1)   | Jan&nbsp;2022 | 33.3 MB | 35.2 MB |
-> | [3.1.0](https://github.com/lampepfl/dotty/releases/tag/3.1.0)   | Oct&nbsp;2021 | 33.1 MB | 35.0 MB |
-> | [3.0.2](https://github.com/lampepfl/dotty/releases/tag/3.0.2)   | Sep&nbsp;2021 | 31.2 MB | 33.0 MB |
-> | [3.0.1](https://github.com/lampepfl/dotty/releases/tag/3.0.1)   | Jul&nbsp;2021 | 29.8 MB | 33.0 MB |
+> **:mag_right:** We observe several jumps in the increases in size of the software distributions :
+> - Scala 2.x to Scala 3.x with the addition of several libraries (eg. [`flexmark`][flexmark], [`jackson`][jackson], [`jline`][jline]).
+> - Scala 3.3.x (and 3.4.x) to Scala 3.5.x (and newer) with the addition of `scala-cli.exe`.
+>
+> |  Scala 3  | Release&nbsp;date | Zip&nbsp;archive | Installation | Remarks |
+> |:----------|:------------:|:-----------:|:------------:|:--------|
+> | [**3.7.4**](https://github.com/scala/scala3/releases/tag/3.7.4) | Nov&nbsp;2025 | 74.1 MB | 155.0 MB | |
+> | [3.7.3](https://github.com/scala/scala3/releases/tag/3.7.3) | Sep&nbsp;2025 | 73.9 MB |  | |
+> | [3.6.4](https://github.com/scala/scala3/releases/tag/3.6.4) | Mar&nbsp;2025 | 68.2 MB |  | |
+> | [3.5.2](https://github.com/scala/scala3/releases/tag/3.5.2) | Oct&nbsp;2024 | 69.7 MB |  | [Support JDK 22](https://github.com/scala/scala3/pull/21499) |
+> | [3.5.0](https://github.com/scala/scala3/releases/tag/3.5.0) | Aug&nbsp;2024 | 69.4 MB |  | Bundle `scala-cli.exe` |
+
+> |  Scala 3  | Release&nbsp;date | Zip&nbsp;archive | Installation | Remarks |
+> |:----------|:------------:|:-----------:|:------------:|:--------|
+> | [3.4.2](https://github.com/scala/scala3/releases/tag/3.4.2) | May&nbsp;2024 | 37.3 MB | 29.4 MB | |
+> | [3.4.1](https://github.com/scala/scala3/releases/tag/3.4.1)     | Mar&nbsp;2024 | 36.6 MB | | |
+> | [3.4.0](https://github.com/scala/scala3/releases/tag/3.4.0)     | Feb&nbsp;2024 | 36.5 MB | | |
+> | [**3.3.7 LTS**](https://github.com/scala/scala3/releases/tag/3.3.7) | Oct&nbsp;2025 | 35.2 MB | 37.4 MB | |
+> | [3.3.5 LTS](https://github.com/scala/scala3/releases/tag/3.3.5) | Jan&nbsp;2025 | 34.9 MB |  | [Support JDK 23](https://github.com/scala/scala3/pull/20144) |
+> | [3.3.3 LTS](https://github.com/scala/scala3/releases/tag/3.3.3)     | Feb&nbsp;2024 | 35.5 MB | 37.5 MB | |
+> | [3.3.1 LTS](https://github.com/lampepfl/dotty/releases/tag/3.3.1)   | Sep&nbsp;2023 | 36.6 MB | 38.7 MB | |
+> | [3.3.0 LTS](https://github.com/lampepfl/dotty/releases/tag/3.3.0)   | May&nbsp;2023 | 36.0 MB | 38.1 MB | |
+> | [3.2.2](https://github.com/lampepfl/dotty/releases/tag/3.2.2)   | Jan&nbsp;2023 | 35.5 MB | 37.6 MB | |
+> | [3.2.1](https://github.com/lampepfl/dotty/releases/tag/3.2.1)   | Sep&nbsp;2022 | 35.5 MB | 37.6 MB | |
+> | [3.2.0](https://github.com/lampepfl/dotty/releases/tag/3.2.0)   | Sep&nbsp;2022 | 34.2 MB | 36.1 MB | |
+> | [3.1.3](https://github.com/lampepfl/dotty/releases/tag/3.1.3)   | Jun&nbsp;2022 | 33.8 MB | 35.7 MB | |
+> | [3.1.2](https://github.com/lampepfl/dotty/releases/tag/3.1.2)   | Apr&nbsp;2022 | 33.4 MB | 35.3 MB | |
+> | [3.1.1](https://github.com/lampepfl/dotty/releases/tag/3.1.1)   | Jan&nbsp;2022 | 33.3 MB | 35.2 MB | |
+> | [3.1.0](https://github.com/lampepfl/dotty/releases/tag/3.1.0)   | Oct&nbsp;2021 | 33.1 MB | 35.0 MB | |
+> | [3.0.2](https://github.com/lampepfl/dotty/releases/tag/3.0.2)   | Sep&nbsp;2021 | 31.2 MB | 33.0 MB | |
+> | [3.0.1](https://github.com/lampepfl/dotty/releases/tag/3.0.1)   | Jul&nbsp;2021 | 29.8 MB | 33.0 MB | |
 >
 > | Scala 2.13 | Release&nbsp;date | Zip&nbsp;archive | Installation |
 > |:-----------|:------------:|:-----------:|:------------:|
-> | [**2.13.15**](https://www.scala-lang.org/download/2.13.15.html) | Sep&nbsp;2024 | 23.3 MB | 24.8 MB |
+> | [**2.13.18**](https://contributors.scala-lang.org/t/scala-2-13-18-release-planning/7271/4) | Nov&nbsp;2025 | 21.6 MB | 23.1 MB |
+> | [2.13.17](https://www.scala-lang.org/download/2.13.17.html) | Oct&nbsp;2025 | 23.3 MB |  |
+> | [2.13.16](https://www.scala-lang.org/download/2.13.16.html) | Jan&nbsp;2025 | 21.6 MB |  |
+> | [2.13.15](https://www.scala-lang.org/download/2.13.15.html) | Sep&nbsp;2024 | 23.3 MB | 24.8 MB |
 > | [2.13.14](https://www.scala-lang.org/download/2.13.14.html) | May&nbsp;2024 | 23.3 MB | 24.8 MB |
-> | [2.13.13](https://www.scala-lang.org/download/2.13.13.html)     |               | 23.0 MB | |
-> | [2.13.12](https://www.scala-lang.org/download/2.13.12.html)     | Sep&nbsp;2023 | 22.9 MB | 24.4 MB |
-> | [2.13.11](https://www.scala-lang.org/download/2.13.11.html)     | Jun&nbsp;2023 | 22.9 MB | 24.4 MB |
-> | [2.13.10](https://www.scala-lang.org/download/2.13.10.html)     | Oct&nbsp;2022 | 22.6 MB | 24.0 MB |
-> | [2.13.9](https://www.scala-lang.org/download/2.13.9.html)       | Sep&nbsp;2022 | 22.5 MB | 24.0 MB |
-> | [2.13.8](https://www.scala-lang.org/download/2.13.8.html)       | Jan&nbsp;2022 | 22.6 MB | 24.1 MB |
-> | [2.13.7](https://www.scala-lang.org/download/2.13.7.html)       | Nov&nbsp;2021 | 22.6 MB | 24.1 MB |
-> | [2.13.6](https://www.scala-lang.org/download/2.13.6.html)       | May&nbsp;2021 | 22.3 MB | 23.8 MB |
+> | [2.13.13](https://www.scala-lang.org/download/2.13.13.html) | Feb&nbsp;2024  | 23.0 MB | |
+> | [2.13.12](https://www.scala-lang.org/download/2.13.12.html) | Sep&nbsp;2023 | 22.9 MB | 24.4 MB |
+> | [2.13.11](https://www.scala-lang.org/download/2.13.11.html) | Jun&nbsp;2023 | 22.9 MB | 24.4 MB |
+> | [2.13.10](https://www.scala-lang.org/download/2.13.10.html) | Oct&nbsp;2022 | 22.6 MB | 24.0 MB |
+> | [2.13.9](https://www.scala-lang.org/download/2.13.9.html)   | Sep&nbsp;2022 | 22.5 MB | 24.0 MB |
+> | [2.13.8](https://www.scala-lang.org/download/2.13.8.html)   | Jan&nbsp;2022 | 22.6 MB | 24.1 MB |
+> | [2.13.7](https://www.scala-lang.org/download/2.13.7.html)   | Nov&nbsp;2021 | 22.6 MB | 24.1 MB |
+> | [2.13.6](https://www.scala-lang.org/download/2.13.6.html)   | May&nbsp;2021 | 22.3 MB | 23.8 MB |
 >
 > | Scala 2.12 | Release&nbsp;date | Zip&nbsp;archive | Installation |
 > |:-----------|:------------:|:-----------:|:------------:|
@@ -63,6 +80,8 @@ The [Scala 3](https://www.scala-lang.org/download/scala3.html) and [Scala 2](htt
 > | [2.12.15](https://www.scala-lang.org/download/2.12.15.html)     | Sep&nbsp;2021 | 20.1 MB | 21.5 MB |
 
 In the next sections we give more details on those dependencies for the different Scala distributions currently available, namely [3.3](#scala33_releases), [3.2](#scala32_releases), [3.1](#scala31_releases), [3.0](#scala30_releases), [2.13](#scala213_releases) and [2.12](#scala212_releases).
+
+<!--=======================================================================-->
 
 ## <span id="scala33_releases">Dependencies in Scala 3.3 Releases</span> [**&#x25B4;**](#top)
 
@@ -588,7 +607,7 @@ The following table presents the library dependencies of the Scala 2.13 distribu
 </tr>
 <tr>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.jline/jline" rel="external"><code>jline</code></a></td>
-  <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.jline/jline/3.23.0" rel="external"><b>3.23.0</b></a><br/><span style="color:gray;font-size:80%;">(Mar&nbsp;2023)</span></td>
+  <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.jline/jline/3.30.6" rel="external"><b>3.30.6</b></a><br/><span style="color:gray;font-size:80%;">(Sep&nbsp;2025)</span></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.jline/jline/3.15.0" rel="external">3.15.0</a></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.jline/jline/3.16.0" rel="external">3.16.0</a></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.jline/jline/3.19.0" rel="external">3.19.0</a></td>
@@ -616,7 +635,7 @@ The following table presents the library dependencies of the Scala 2.13 distribu
 </tr>
 <tr>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm"><code>scala-asm</code></a> <sup id="anchor_02"><a href="#footnote_02">2</a></sup></td>
-  <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/9.5.0-scala-1"><b>9.5.0</b></a><br/><span style="color:gray;font-size:80%;">(Apr&nbsp;2023)</span></td>
+  <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/9.9.0-scala-1"><b>9.9.0</b></a><br/><span style="color:gray;font-size:80%;">(Oct&nbsp;2025)</span></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/7.3.1-scala-1">7.3.1</a></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/7.3.1-scala-1">7.3.1</a></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/9.1.0-scala-1">9.1.0</a></td>
@@ -664,7 +683,7 @@ The following table presents the library dependencies of the Scala 2.12 distribu
 </tr>
 <tr>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm" rel="external"><code>scala-asm</code></a> <sup id="anchor_02"><a href="#footnote_02">2</a></sup></td>
-  <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/9.5.0-scala-1" rel="external"><b>9.5.0</b></a><br/><span style="color:gray;font-size:80%;">(Apr&nbsp;2023)</span></td>
+  <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/9.9.0-scala-1" rel="external"><b>9.9.0</b></a><br/><span style="color:gray;font-size:80%;">(Oct&nbsp;2025)</span></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/7.3.1-scala-1" rel="external">7.3.1</a></td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/7.3.1-scala-1" rel="external">7.3.1</a</td>
   <td style="padding:4px;"><a href="https://mvnrepository.com/artifact/org.scala-lang.modules/scala-asm/9.1.0-scala-1" rel="external">9.1.0</a</td>
@@ -743,53 +762,73 @@ Besides improvements and fixes <code>scala-asm</code> library updates also add s
   <th><a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">Class&nbsp;file&nbsp;version</a></th>
 </tr>
 <tr>
+  <td><a href="https://asm.ow2.io/versions.html">9.9</a></td>
+  <td><a href="https://openjdk.org/projects/jdk/26/">26</a></td>
+  <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L385" rel="external">70</a></td>
+</tr>
+<tr>
+  <td><a href="https://asm.ow2.io/versions.html">9.8</a></td>
+  <td><a href="https://openjdk.org/projects/jdk/25/">25</a></td>
+  <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L373" rel="external">69</a></td>
+</tr>
+<tr>
   <td><a href="https://asm.ow2.io/versions.html">9.7.1</a></td>
-  <td>24</td>
+  <td><a href="https://openjdk.org/projects/jdk/24/">24</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L320" rel="external">68</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.7.0</a></td>
-  <td>23</td>
+  <td><a href="https://openjdk.org/projects/jdk/23/">23</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L308" rel="external">67</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.6.0</a></td>
-  <td>22</td>
+  <td><a href="https://openjdk.org/projects/jdk/22/">22</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L296" rel="external">66</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.5.0</a></td>
-  <td>21</td>
+  <td><a href="https://openjdk.org/projects/jdk/21/">21</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L284" rel="external">65</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.4.0</a></td>
-  <td>20</td>
+  <td><a href="https://openjdk.org/projects/jdk/20/">20</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L272" rel="external">64</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.3.0</a></td>
-  <td>19</td>
+  <td><a href="https://openjdk.org/projects/jdk/19/">19</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L255" rel="external">63</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.2.0</a></td>
-  <td>18</td>
+  <td><a href="https://openjdk.org/projects/jdk/18/">18</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L245" rel="external">62</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">9.1.0</a></td>
-  <td>17</td>
+  <td><a href="https://openjdk.org/projects/jdk/17/">17</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L235" rel="external">61</a></td>
 </tr>
 <tr>
   <td><a href="https://asm.ow2.io/versions.html">7.3.1</a></td>
-  <td>15</td>
+  <td><a href="https://openjdk.org/projects/jdk/15/">15</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L208" rel="external">59</a></td>
 </tr>
 <tr>
+  <td><a href="https://asm.ow2.io/versions.html">7.2</a></td>
+  <td><a href="https://openjdk.org/projects/jdk/14/">14</a></td>
+  <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L196" rel="external">58</a></td>
+</tr>
+<tr>
+  <td><a href="https://asm.ow2.io/versions.html">7.1</a></td>
+  <td><a href="https://openjdk.org/projects/jdk/13/">13</a></td>
+  <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L186" rel="external">57</a></td>
+</tr>
+<tr>
   <td><a href="https://asm.ow2.io/versions.html">7.0.0</a></td>
-  <td>11</td>
+  <td><a href="https://openjdk.org/projects/jdk/11/">11</a></td>
   <td><a href="https://github.com/openjdk/jdk/blob/f3ca0cab75f2faf9ec88f7a380490c9589a27102/src/java.base/share/classes/java/lang/reflect/ClassFileFormatVersion.java#L166" rel="external">55</a></td>
 </tr>
 </table>
@@ -900,9 +939,11 @@ Besides improvements and fixes <code>scala-asm</code> library updates also add s
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/October 2025* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/November 2025* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
 
-
+[flexmark]: https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark "CommonMark/Markdown Java parser with source level AST"
+[jackson]: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core "JSON for Java"
+[jline]: https://mvnrepository.com/artifact/org.jline/jline "Advanced Console Input for Java"

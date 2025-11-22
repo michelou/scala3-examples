@@ -32,7 +32,7 @@ set __SCALA_XML_VERSION=2.4.0
 @rem https://mvnrepository.com/artifact/org.scalatest/scalatest
 set __SCALATEST_VERSION=3.2.19
 @rem https://mvnrepository.com/artifact/org.specs2/specs2-core
-set __SPECS2_VERSION=5.6.4
+set __SPECS2_VERSION=5.7.0
 
 @rem #########################################################################
 @rem ## Libraries to be added to _LIBS_CPATH
@@ -80,7 +80,7 @@ call :add_jar "org.scalactic" "scalactic_3" "%__SCALATEST_VERSION%"
 
 @rem https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
 @rem NB. dependency of specs2
-call :add_jar "org.scala-lang" "scala-reflect" "2.13.16"
+call :add_jar "org.scala-lang" "scala-reflect" "2.13.18"
 
 @rem https://mvnrepository.com/artifact/org.specs2/specs2-core
 call :add_jar "org.specs2" "specs2-core_3" "%__SPECS2_VERSION%"

@@ -21,7 +21,7 @@ val scalaSourcePath = os.pwd / "src" / "main" / "scala"
 val junitVersion = "4.13.2"
 val jupiterVersion = "1.14.0"
 val scalatestVersion = "3.2.19"
-val specs2Version = "5.6.4"
+val specs2Version = "5.7.0"
 
 // https://mvnrepository.com/artifact/junit/junit
 val ivyJunit = ivy"org.junit:org.junit:$junitVersion"
@@ -51,7 +51,7 @@ val ivySpecs2Core = ivy"org.specs2:specs2-core_3:$specs2Version"
 val ivySpecs2JUnit = ivy"org.specs2:specs2-junit_3:$specs2Version"
 
 // https://mvnrepository.com/artifact/org.scala-lang.modules/scala-xml
-val ivyScalaXml = ivy"org.scala-lang.modules:scala-xml_3:2.3.0"
+val ivyScalaXml = ivy"org.scala-lang.modules:scala-xml_3:2.4.0"
 
 // https://mvnrepository.com/artifact/org.scala-lang.modules/scala-parser-combinators
 val ivyScalaParser = ivy"org.scala-lang.modules:scala-parser-combinators_3:2.4.0"

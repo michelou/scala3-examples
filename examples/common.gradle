@@ -19,7 +19,7 @@ project.ext {
 
     scalaBinaryVersion = isScala3 ? "3" : "2.13"
     scalatestVersion = "3.2.19"
-    specs2Version = isScala3 ? "5.5.8" : "4.17.0"
+    specs2Version = isScala3 ? "5.7.0" : "4.17.0"
     dependencies {
         if (isScala3) {
             implementation "org.scala-lang:scala3-compiler_3:$scalaVersion"

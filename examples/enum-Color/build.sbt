@@ -20,7 +20,7 @@ lazy val root = project
       // https://mvnrepository.com/artifact/com.github.sbt/junit-interface
       "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
       // https://mvnrepository.com/artifact/org.scalacheck/scalacheck
-      "org.scalacheck" %% "scalacheck" % "1.18.0" % Test,
+      "org.scalacheck" %% "scalacheck" % "1.19.0" % Test,
       // https://mvnrepository.com/artifact/org.scalatest/scalatest
       "org.scalatest" %% "scalatest" % "3.2.19" % Test
     ),

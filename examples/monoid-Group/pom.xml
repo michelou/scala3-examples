@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dotty-examples</groupId>
+    <artifactId>enum-Planet</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>dotty-examples</groupId>
+        <artifactId>examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <!-- see parent pom.xml -->
+    </dependencies>
+
+    <properties>
+        <mainClass>Planet</mainClass>
+    </properties>
+
+    <build>
+        <sourceDirectory>src/main</sourceDirectory>
+        <testSourceDirectory>src/test</testSourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+        <plugins>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <includes>
+                        <include>java/**/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!-- local Maven plugin for Scala 2.x/3.x (see ${scala.version}) -->
+            <!-- (see directory /plugins/scala-maven-plugin/) -->
+            <plugin>
+                <groupId>ch.epfl.alumni</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala.maven.version}</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <compilerArgs>
+                                <compilerArg>-deprecation</compilerArg>
+                            </compilerArgs>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${m2.junit.jar}</additionalClasspathElement>
+                                <!-- NB. specs2-core depends on scala-reflect -->
+                                <additionalClasspathElement>${m2.scala-reflect.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${m2.scalatest.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${m2.specs2-common.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${m2.specs2-core.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${m2.specs2-fp.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${m2.specs2-junit.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${m2.specs2-matcher.jar}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <includes>
+                                <include>scala/**/*.scala</include>
+                            </includes>
+                            <installDirectory>${env.SCALA3_HOME}</installDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>scala-run</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>${mainClass}</mainClass>
+                            <arguments>
+                                <argument>1</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <localInstall>${scala.local.install}</localInstall>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+            </plugin>
+            <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.maven.version}</version>
+                <executions>
+                    <execution>
+                        <phase>exec</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                    <arguments>
+                        <argument>1</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
