@@ -1,4 +1,4 @@
-val scala3Version = "3.3.5" // dottyLatestNightlyBuild.get
+val scala3Version = "3.3.8-RC2" // dottyLatestNightlyBuild.get
 
 lazy val root = project
   .in(file("."))
@@ -21,9 +21,9 @@ lazy val root = project
       // https://mvnrepository.com/artifact/com.github.sbt/junit-interface
       "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
       // https://mvnrepository.com/artifact/org.scalacheck/scalacheck
-      "org.scalacheck" % "scalacheck_2.13" % "1.18.0" % Test,
+      "org.scalacheck" % "scalacheck_3" % "1.19.0" % Test,
       // https://mvnrepository.com/artifact/org.scalatest/scalatest
-      "org.scalatest" % "scalatest_2.13" % "3.2.19" % "test"
+      "org.scalatest" % "scalatest_3" % "3.2.20" % "test"
     ),
 
     testOptions ++= Seq(

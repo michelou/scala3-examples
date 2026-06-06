@@ -56,12 +56,12 @@ JUNIT_VERSION = 4.13.2
 ## https://mvnrepository.com/artifact/org.scala-lang/scala-library
 SCALA_VERSION = 2.13.18
 ## https://mvnrepository.com/artifact/org.scala-lang/scala3-library
-SCALA3_VERSION = 3.3.7
+SCALA3_VERSION = 3.3.8-RC2
 ## https://mvnrepository.com/artifact/org.scalatest/scalatest
-SCALATEST_VERSION = 3.2.19
+SCALATEST_VERSION = 3.2.20
 ## https://mvnrepository.com/artifact/org.specs2/specs2-core
 ## Note: Specs2 5.x depends on Scala 3 while Specs2 4.x depends on Scala 2 or Scala 3
-SPECS2_VERSION = 5.7.0
+SPECS2_VERSION = 5.9.0
 
 SCALA_LIB_JAR         = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala-library-$(SCALA_VERSION).jar" | tail -1)
 SCALA3_LIB_JAR        = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala3-library_3-$(SCALA3_VERSION).jar" | tail -1)

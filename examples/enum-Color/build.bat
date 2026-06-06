@@ -59,15 +59,6 @@ set "_JAVA_CMD=%JAVA_HOME%\bin\java.exe"
 set "_JAVAC_CMD=%JAVA_HOME%\bin\javac.exe"
 set "_JAVADOC_CMD=%JAVA_HOME%\bin\javadoc.exe"
 
-if not exist "%SCALA_HOME%\bin\scalac.bat" (
-    echo %_ERROR_LABEL% Scala 2 installation not found 1>&2
-    set _EXITCODE=1
-    goto :eof
-)
-set "_SCALA2=%SCALA_HOME%\bin\scala.bat"
-set "_SCALAC2=%SCALA_HOME%\bin\scalac.bat"
-set "_SCALADOC2=%SCALA_HOME%\bin\scaladoc.bat"
-
 if not exist "%SCALA3_HOME%\bin\scalac.bat" (
     echo %_ERROR_LABEL% Scala 3 installation not found 1>&2
     set _EXITCODE=1

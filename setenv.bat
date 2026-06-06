@@ -220,13 +220,17 @@ set _VERBOSE=0
 :args_loop
 set "__ARG=%~1"
 if not defined __ARG goto args_done
-
+:args_retry
 if "%__ARG:~0,1%"=="-" (
     @rem option
     if "%__ARG%"=="-bash" ( set _MSYS=0& set _BASH=1
     ) else if "%__ARG%"=="-debug" ( set _DEBUG=1
     ) else if "%__ARG%"=="-msys" ( set _BASH=0& set _MSYS=1
     ) else if "%__ARG%"=="-verbose" ( set _VERBOSE=1
+    ) else if "%__ARG%"=="-verbsoe" (
+        echo %_WARNING_LABEL% Unknown option "%__ARG%"; let's assume you meant "-verbose" 1>&2
+        set __ARG=-verbose
+        goto args_retry
     ) else (
         echo %_ERROR_LABEL% Unknown option "%__ARG%" 1>&2
         set _EXITCODE=1

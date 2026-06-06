@@ -25,13 +25,14 @@ Build tools rely on one or more configuration files to achieve their tasks. In o
 | [**&#9660;**](#ant) | [**`ant.bat`**][apache_ant_cli] | [**`build.xml`**](enum-Planet/build.xml) | [**`build.xml`**](./build.xml), [**`ivy.xml`**](ivy.xml) | Any <sup><b>a)</b></sup> |
 | | [**`bazel.exe`**][bazel_cli] | [**`BUILD`**](enum-Planet/BUILD), [**`WORKSPACE`**](enum-Planet/WORKSPACE) | n.a.                                | Any |
 | [**&#9660;**](#batch) | [**`cmd.exe`**][cmd_cli] | [**`build.bat`**](enum-Planet/build.bat)<br/>([**`build.properties`**](enum-Planet/project/build.properties)) | [**`cpath.bat`**](./cpath.bat) <sup><b>b)</b></sup>              | Windows only |
-| [**&#9660;**](#shell) | [**`sh.exe`**][sh_cli] | [**`build.sh`**](enum-Planet/build.sh)<br/>([**`build.properties`**](enum-Planet/project/build.properties)) |                   | [Cygwin]/[MSYS2]/Unix only |
 | [**&#9660;**](#gradle) | [**`gradle.exe`**][gradle_cli] | [**`build.gradle`**](enum-Planet/build.gradle) | [**`common.gradle`**](./common.gradle) | Any |
 | [**&#9660;**](#gmake) | [**`make.exe`**][gmake_cli] <sup><b>c)</b></sup> | [**`Makefile`**](enum-Planet/Makefile)   | [**`Makefile.inc`**](./Makefile.inc)         | Any|
 | [**&#9660;**](#mill) | [**`mill.bat`**][mill_cli] | [`build.sc`](enum-Planet/build.sc)   | [`common.sc`](./common.sc)               | Any |
 | [**&#9660;**](#maven) | [**`mvn.cmd`**][apache_maven_cli] | [`pom.xml`](enum-Planet/pom.xml)     | [`pom.xml`](./pom.xml)                   | Any |
+| [**&#9660;**](#powershell) | [**`pwsh.exe`**][pwsh_cli] |  [`build.ps1`](enum-Planet/build.ps1) | - | Any |
 | [**&#9660;**](#sbt) | [**`sbt.bat`**][sbt_cli] | [`build.sbt`](enum-Planet/build.sbt) | n.a.                                         | Any |
 | [**&#9660;**](#scala_cli) | [**`scala-cli.exe`**][scala_cli] | | | Any |
+| [**&#9660;**](#shell) | [**`sh.exe`**][sh_cli] | [**`build.sh`**](enum-Planet/build.sh)<br/>([**`build.properties`**](enum-Planet/project/build.properties)) |                   | [Cygwin]/[MSYS2]/Unix only |
 <div style="margin:0 10% 0 8px;font-size:80%;">
 <b><sup>a)</sup></b> Here "Any" means "tested on Windows, Cygwin, MSYS2 and Unix".<br/>
 <b><sup>b)</sup></b> This utility batch file manages <a href="https://maven.apache.org/" rel="external">Maven</a> dependencies and returns the associated Java class path (as environment variable).<br/>
@@ -56,8 +57,8 @@ Buildfile: Y:\examples\enum-Planet\build.xml
 <span style="font-weight:bold;color:#9966ff;">init.local:</span>
 
 <span style="font-weight:bold;color:#9966ff;">init.ivy:</span>
-[ivy:resolve] :: Apache Ivy 2.5.2- 20230817170011 :: https://ant.apache.org/ivy/ ::
-[ivy:resolve] :: loading settings :: url = jar:file:/C:/opt/apache-ant/lib/ivy-2.5.2.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[ivy:resolve] :: Apache Ivy 2.5.3 - 20241223125031 :: https://ant.apache.org/ivy/ ::
+[ivy:resolve] :: loading settings :: url = jar:file:/C:/opt/apache-ant/lib/ivy-2.5.3.jar!/org/apache/ivy/core/settings/ivysettings.xml
 
 <span style="font-weight:bold;color:#9966ff;">init:</span>
 
@@ -80,13 +81,13 @@ Total time: 19 seconds
 </pre>
 
 > **&#9755;** **Apache Ivy**<br/>
-> We observe from task **`init.ivy`** that the [Apache Ivy][apache_ant_ivy] library has been added to the [Ant](https://ant.apache.org/) installation directory. In our case we installed [version 2.5.2][apache_ant_ivy_relnotes] of the [Apache Ivy][apache_ant_ivy] library.
+> We observe from task **`init.ivy`** that the [Apache Ivy][apache_ant_ivy] library has been added to the [Ant](https://ant.apache.org/) installation directory. In our case we installed [version 2.5.3][apache_ant_ivy_relnotes] of the [Apache Ivy][apache_ant_ivy] library.
 > <pre style="font-size:80%;">
-> <b>&gt; <a href="https://curl.haxx.se/docs/manpage.html">curl</a> -sL -o c:\Temp\apache-ivy-2.5.2.zip <a href="https://downloads.apache.org/ant/ivy/2.5.2/">https://www-eu.apache.org/dist/ant/ivy/2.5.2/apache-ivy-2.5.2-bin.zip</a></b>
-> <b>&gt; <a href="https://linux.die.net/man/1/unzip">unzip</a> c:\temp\apache-ivy-2.5.2.zip -d c:\opt</b>
-> <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/copy">copy</a> c:\opt\apache-ivy-2.5.2\ivy-2.5.2.jar c:\opt\apache-ant-1.10.13\lib</b>
+> <b>&gt; <a href="https://curl.haxx.se/docs/manpage.html">curl</a> -sL -o c:\Temp\apache-ivy-2.5.3.zip <a href="https://downloads.apache.org/ant/ivy/2.5.2/">https://www-eu.apache.org/dist/ant/ivy/2.5.3/apache-ivy-2.5.3-bin.zip</a></b>
+> <b>&gt; <a href="https://linux.die.net/man/1/unzip">unzip</a> c:\temp\apache-ivy-2.5.3.zip -d c:\opt</b>
+> <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/copy">copy</a> c:\opt\apache-ivy-2.5.3\ivy-2.5.3.jar c:\opt\apache-ant\lib</b>
 > <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir">dir</a> c:\opt\apache-ant\lib | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> ivy</b>
-> 20.10.2019  09:44         1 402 646 ivy-2.5.2.jar
+> 20.10.2019  09:44         1 402 646 ivy-2.5.3.jar
 > </pre>
 
 We can set property **`-Duse.local=true`** to use [Scala 3][scala3_home] local installation (*reminder*: in our case environment variable **`SCALA3_HOME`** is set by command **`setenv`**):
@@ -99,7 +100,7 @@ Buildfile: Y:\examples\enum-Planet\build.xml
    [delete] Deleting directory Y:\examples\enum-Planet\target
 
 <span style="font-weight:bold;color:#9966ff;">init.local:</span>
-     [echo] SCALA3_HOME=C:\opt\scala3-3.3.5
+     [echo] SCALA3_HOME=C:\opt\scala3-3.3.8
 
 <span style="font-weight:bold;color:#9966ff;">init.ivy:</span>
 
@@ -177,7 +178,7 @@ Command [**`build -debug clean run`**](enum-Planet/build.bat) also displays inte
 [build] Options    : _EXPLAIN=0 _PRINT=0 _SCALA_VERSION=3 _TASTY=0 _TIMER=0 _VERBOSE=0
 [build] Subcommands:  clean compile run
 [build] Variables  : "CFR_HOME=C:\opt\cfr-0.152"
-[build] Variables  : "JAVA_HOME=C:\opt\jdk-temurin-17.0.13_11"
+[build] Variables  : "JAVA_HOME=C:\opt\jdk-temurin-17.0.19_10"
 [build] Variables  : "SCALA3_HOME=C:\opt\scala3-3.3.4"
 [build] Variables  : "SCALA_HOME=C:\opt\scala-2.13.15"
 [build] Variables  : _MAIN_CLASS=Planet _MAIN_ARGS=1
@@ -227,10 +228,10 @@ No action required ("src\main\scala\*.scala")
 Decompile Java bytecode to directory "target\cfr-sources"
 Processing Planet$
 Processing Planet
-Save decompiled Java source files to "target\cfr-sources_scala3_3.3.5.java"
+Save decompiled Java source files to "target\cfr-sources_scala3_3.3.8.java"
 &nbsp;
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir">dir</a> /b /s target\*.java</b>
-Y:\examples\enum-Planet\target\cfr-sources_scala3_3.3.5.java
+Y:\examples\enum-Planet\target\cfr-sources_scala3_3.3.8.java
 Y:\examples\enum-Planet\target\cfr-sources\Planet$.java
 Y:\examples\enum-Planet\target\cfr-sources\Planet.java
 </pre>
@@ -243,12 +244,13 @@ cfr-sources_scala3_3.1.0.java
 cfr-sources_scala3_3.2.2.java
 cfr-sources_scala3_3.3.0.java
 cfr-sources_scala3_3.3.5.java
+cfr-sources_scala3_3.3.8.java
 &nbsp;
 <b>&gt; <a href="enum-Planet/build.bat">build</a> -verbose decompile</b>
 No action required ("src\main\scala\*.scala")
 Decompile Java bytecode to directory "target\cfr-sources"
-Save decompiled Java source files to "target\cfr-sources_scala3_3.3.5.java"
-Compare output file with check file "src\build\cfr-sources_scala3_3.3.5.java"
+Save decompiled Java source files to "target\cfr-sources_scala3_3.3.8.java"
+Compare output file with check file "src\build\cfr-sources_scala3_3.3.8.java"
 </pre>
 
 
@@ -327,7 +329,7 @@ Command **`make test`** executes the test suite [**`PlanetTest.scala`**](enum-Pl
 <b>&gt; <a href="http://www.glue.umd.edu/lsf-docs/man/gmake.html">make</a> test</b>
 [ -d "target/test-classes" ] || mkdir -p "target/test-classes"
 scalac.bat "@target/scalac_test_opts.txt" "@target/scalac_test_sources.txt"
-java.exe -classpath "%USERPROFILE%/.m2/repository/org/scala-lang/scala-library/2.13.15/scala-library-2.13.15.jar;%USERPROFILE%/.m2/repository/org.scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3..jar;%USERPROFILE%/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar;%USERPROFILE%/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar;%USERPROFILE%/.m2/repository/com/novocode/junit-interface/0.11/junit-interface-0.11.jar;target/classes;target/test-classes" org.junit.runner.JUnitCore PlanetTest
+java.exe -classpath "%USERPROFILE%/.m2/repository/org/scala-lang/scala-library/2.13.15/scala-library-2.13.15.jar;%USERPROFILE%/.m2/repository/org.scala-lang/scala3-library_3/3.3.8/scala3-library_3-3.3.8-RC2.jar;%USERPROFILE%/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar;%USERPROFILE%/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar;%USERPROFILE%/.m2/repository/com/novocode/junit-interface/0.11/junit-interface-0.11.jar;target/classes;target/test-classes" org.junit.runner.JUnitCore PlanetTest
 JUnit version 4.13.2
 ..3
 
@@ -364,17 +366,17 @@ Command **` mvn.cmd compile test`** with option **`-debug`** produces additional
 
 <pre style="font-size:80%;">
 <b>&gt; <a href="https://maven.apache.org/ref/3.6.3/maven-embedder/cli.html">mvn</a> -debug compile test | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr">findstr</a> /b /c:"[DEBUG]\ [execute]" 2>NUL</b>
-[DEBUG] [execute] C:\opt\jdk-temurin-17.0.13_11\bin\java.exe \
- -Xms64m -Xmx1024m -Dscala.home=C:\opt\scala3-3.3.5 \
- -cp C:\opt\scala3-3.3.5\lib\*.jar -Dscala.usejavacp=true  \
+[DEBUG] [execute] C:\opt\jdk-temurin-17.0.19_10\bin\java.exe \
+ -Xms64m -Xmx1024m -Dscala.home=C:\opt\scala3-3.3.8 \
+ -cp C:\opt\scala3-3.3.8\lib\*.jar -Dscala.usejavacp=true  \
  dotty.tools.dotc.Main \
  -classpath Y:\examples\hello-scala\target\classes \
  -d Y:\examples\hello-scala\target\classes \
  Y:\examples\hello-scala\src\main\scala\hello.scala
-[DEBUG] [execute] C:\opt\jdk-temurin-17.0.13_11\bin\java.exe \
- -Xms64m -Xmx1024m -Dscala.home=C:\opt\scala3-3.3.5 [...]
-[DEBUG] [execute] C:\opt\jdk-temurin-17.0.13_11\bin\java.exe \
- -Xms64m -Xmx1024m -cp C:\opt\scala3-3.3.5\lib\*.jar;\
+[DEBUG] [execute] C:\opt\jdk-temurin-17.0.19_10\bin\java.exe \
+ -Xms64m -Xmx1024m -Dscala.home=C:\opt\scala3-3.3.8 [...]
+[DEBUG] [execute] C:\opt\jdk-temurin-17.0.19_10\bin\java.exe \
+ -Xms64m -Xmx1024m -cp C:\opt\scala3-3.3.8\lib\*.jar;\
 Y:\examples\hello-scala\target\classes hello
 </pre>
 
@@ -414,7 +416,7 @@ Your weight on NEPTUNE (7) is 1.1383280724696578
 <b>&gt; <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html" rel="external">java</a> -version 2>&1 | <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/findstr" rel="external">findstr</a> version</b>
 openjdk version "11.0.19" 2023-04-18
 
-<b>&gt; <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html" rel="external">java</a> -Xbootclasspath/a:"c:\opt\scala3-3.3.5\lib\scala3-library_3-3.3.5.jar;c:\opt\scala3-3.3.5\lib\scala-library-2.13.15.jar" -jar target\enum-Planet-1.0-SNAPSHOT.jar 1</b>
+<b>&gt; <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.html" rel="external">java</a> -Xbootclasspath/a:"c:\opt\scala3-3.3.8\lib\scala3-library_3-3.3.8.jar;c:\opt\scala3-3.3.8\lib\scala-library-2.13.18.jar" -jar target\enum-Planet-1.0-SNAPSHOT.jar 1</b>
 Your weight on MERCURY (0) is 0.37775761520093526
 Your weight on VENUS (1) is 0.9049990998410455
 Your weight on EARTH (2) is 0.9999999999999999
@@ -479,7 +481,7 @@ The [Mill][mill_cli] build file [**`enum-Planet\build.sc`**](enum-Planet/build.s
 
 > **:mag_right:** Command [**`mill`**][mill_cli] is a Scala-based build tool which aims for simplicity to build projects in a fast and predictable manner.
 
-Command [**`mill.bat -i app`**](enum-Planet/build.sc) produces the following output:
+Command [**`mill.bat -i app`**](enum-Planet/build.sc) reads the bulild file [`build.sc`](./enum-Planet/build.sc) and produces the following output:
 
 <pre style="font-size:80%;">
 <b>&gt; <a href="https://www.lihaoyi.com/mill/#command-line-tools" rel="external">mill</a> -i app.run 1</b>
@@ -513,7 +515,7 @@ The SBT build file [**`build.sbt`**](enum-Planet/build.sbt) is written in [Scala
 
 > **:mag_right:** [Lightbend] provides commercial support for the [**`sbt`**][sbt_cli] build tool.
 
-Command **<code>[sbt.bat](https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html) -warn clean "run 1"</code>** produces the following output:
+Command **<code>[sbt.bat](https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html) -warn clean "run 1"</code>** reads the build file [`build.sbt`](./enum-Planet/build.sbt) and produces the following output:
 
 <pre style="font-size:80%;">
 <b>&gt; <a href="https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html" rel="external">sbt</a> -warn clean "run 1"</b>
@@ -537,18 +539,18 @@ Specifying option `-cli` in command [`build.bat`](./enum-Planet/build.bat) does 
 [build] Options    : _EXPLAIN=0 _PRINT=0 _SCALA_VERSION=3 _TASTY=0 _TIMER=0 _VERBOSE=0
 [build] Subcommands:  compile run
 [build] Variables  : "CFR_HOME=C:\opt\cfr-0.152"
-[build] Variables  : "JAVA_HOME=C:\opt\jdk-temurin-17.0.13_11"
+[build] Variables  : "JAVA_HOME=C:\opt\jdk-temurin-17.0.19_10"
 [build] Variables  : "SCALA_CLI_HOME=c:\opt\scala-cli"
-[build] Variables  : "SCALA_HOME=C:\opt\scala-2.13.15"
-[build] Variables  : "SCALA3_HOME=C:\opt\scala3-3.3.4"
+[build] Variables  : "SCALA_HOME=C:\opt\scala-2.13.18"
+[build] Variables  : "SCALA3_HOME=C:\opt\scala3-3.3.8"
 [build] Variables  : _MAIN_CLASS=Planet _MAIN_ARGS=1
 [build] "c:\opt\scala-cli\scala-cli.exe" compile -v -O -deprecation --scala 3 "Y:\examples\enum-Planet\src\main\scala"
-Compiling project (Scala 3.3.4, JVM)
-Compiled project (Scala 3.3.4, JVM)
+Compiling project (Scala 3.3.8, JVM)
+Compiled project (Scala 3.3.8, JVM)
 [build] "c:\opt\scala-cli\scala-cli.exe" run -v --scala 3 --main-class "Planet" "Y:\examples\enum-Planet\src\main\scala" -- 1
-Compiling project (Scala 3.3.4, JVM)
-Compiled project (Scala 3.3.4, JVM)
-Running C:\opt\jdk-temurin-17.0.13_11\bin\java.exe -cp Y:\examples\enum-Planet\src\main\scala\.scala-build\project_909ac66893\classes\main;C:\Users\michelou\AppData\Local\Coursier\cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala3-library_3\3.3.4\scala3-library_3-3.3.4.jar;C:\Users\michelou\AppData\Local\Coursier\cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala-library\2.13.15\scala-library-2.13.15.jar Planet 1
+Compiling project (Scala 3.3.8, JVM)
+Compiled project (Scala 3.3.8, JVM)
+Running C:\opt\jdk-temurin-17.0.19_10\bin\java.exe -cp Y:\examples\enum-Planet\src\main\scala\.scala-build\project_909ac66893\classes\main;C:\Users\michelou\AppData\Local\Coursier\cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala3-library_3\3.3.4\scala3-library_3-3.3.4.jar;C:\Users\michelou\AppData\Local\Coursier\cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala-library\2.13.15\scala-library-2.13.15.jar Planet 1
 Mass of earth is 0.1020132025669991
 Your weight on MERCURY (0) is 0.37775761520093526
 Your weight on VENUS (1) is 0.9049990998410455
@@ -687,7 +689,7 @@ public final class main {
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/November 2025* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/June 2026* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->
@@ -695,7 +697,7 @@ public final class main {
 [apache_ant_cli]: https://ant.apache.org/manual/running.html
 [apache_ant_faq]: https://ant.apache.org/faq.html#ant-name
 [apache_ant_ivy]: https://ant.apache.org/ivy/
-[apache_ant_ivy_relnotes]: https://ant.apache.org/ivy/history/2.5.2/release-notes.html
+[apache_ant_ivy_relnotes]: https://ant.apache.org/ivy/history/2.5.3/release-notes.html
 [apache_foundation]: https://maven.apache.org/docs/history.html
 [apache_history]: https://ant.apache.org/faq.html#history
 [apache_maven_about]: https://maven.apache.org/what-is-maven.html
@@ -719,6 +721,7 @@ public final class main {
 [mill_cli]: https://www.lihaoyi.com/mill/#command-line-tools
 [mvn_cli]: https://maven.apache.org/ref/3.6.3/maven-embedder/cli.html
 [msys2]: https://www.msys2.org/
+[pwsh_cli]: https://powershellexplained.com/2017-12-29-Powershell-what-is-pwsh/
 [sbt_cli]: https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html
 [sbt_docs_defs]: https://www.scala-sbt.org/1.0/docs/Basic-Def.html
 [scala]: https://www.scala-lang.org/
