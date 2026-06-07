@@ -22,17 +22,17 @@ Build tools rely on one or more configuration files to achieve their tasks. In o
 
 | | Build&nbsp;tool               | Build&nbsp;file(s)                    | Parent&nbsp;file(s)                          | Environment(s) |
 |-|-------------------------------|---------------------------------------|----------------------------------------------|----------------|
-| [**&#9660;**](#ant) | [**`ant.bat`**][apache_ant_cli] | [**`build.xml`**](enum-Planet/build.xml) | [**`build.xml`**](./build.xml), [**`ivy.xml`**](ivy.xml) | Any <sup><b>a)</b></sup> |
-| | [**`bazel.exe`**][bazel_cli] | [**`BUILD`**](enum-Planet/BUILD), [**`WORKSPACE`**](enum-Planet/WORKSPACE) | n.a.                                | Any |
-| [**&#9660;**](#batch) | [**`cmd.exe`**][cmd_cli] | [**`build.bat`**](enum-Planet/build.bat)<br/>([**`build.properties`**](enum-Planet/project/build.properties)) | [**`cpath.bat`**](./cpath.bat) <sup><b>b)</b></sup>              | Windows only |
-| [**&#9660;**](#gradle) | [**`gradle.exe`**][gradle_cli] | [**`build.gradle`**](enum-Planet/build.gradle) | [**`common.gradle`**](./common.gradle) | Any |
-| [**&#9660;**](#gmake) | [**`make.exe`**][gmake_cli] <sup><b>c)</b></sup> | [**`Makefile`**](enum-Planet/Makefile)   | [**`Makefile.inc`**](./Makefile.inc)         | Any|
-| [**&#9660;**](#mill) | [**`mill.bat`**][mill_cli] | [`build.sc`](enum-Planet/build.sc)   | [`common.sc`](./common.sc)               | Any |
-| [**&#9660;**](#maven) | [**`mvn.cmd`**][apache_maven_cli] | [`pom.xml`](enum-Planet/pom.xml)     | [`pom.xml`](./pom.xml)                   | Any |
-| [**&#9660;**](#powershell) | [**`pwsh.exe`**][pwsh_cli] |  [`build.ps1`](enum-Planet/build.ps1) | - | Any |
-| [**&#9660;**](#sbt) | [**`sbt.bat`**][sbt_cli] | [`build.sbt`](enum-Planet/build.sbt) | n.a.                                         | Any |
+| [**&#9660;**](#ant) | [**`ant.bat`**][apache_ant_cli] | [**`build.xml`**](./enum-Planet/build.xml) | [**`build.xml`**](./build.xml), [**`ivy.xml`**](ivy.xml) | Any <sup><b>a)</b></sup> |
+| | [**`bazel.exe`**][bazel_cli] | [**`BUILD`**](enum-Planet/BUILD), [**`WORKSPACE`**](./enum-Planet/WORKSPACE) | n.a.                                | Any |
+| [**&#9660;**](#batch) | [**`cmd.exe`**][cmd_cli] | [**`build.bat`**](enum-Planet/build.bat)<br/>([**`build.properties`**](./enum-Planet/project/build.properties)) | [**`cpath.bat`**](./cpath.bat) <sup><b>b)</b></sup>              | Windows only |
+| [**&#9660;**](#gradle) | [**`gradle.exe`**][gradle_cli] | [**`build.gradle`**](./enum-Planet/build.gradle) | [**`common.gradle`**](./common.gradle) | Any |
+| [**&#9660;**](#gmake) | [**`make.exe`**][gmake_cli] <sup><b>c)</b></sup> | [**`Makefile`**](./enum-Planet/Makefile)   | [**`Makefile.inc`**](./Makefile.inc)         | Any|
+| [**&#9660;**](#mill) | [**`mill.bat`**][mill_cli] | [`build.sc`](./enum-Planet/build.sc)   | [`common.sc`](./common.sc)               | Any |
+| [**&#9660;**](#maven) | [**`mvn.cmd`**][apache_maven_cli] | [`pom.xml`](./enum-Planet/pom.xml)     | [`pom.xml`](./pom.xml)                   | Any |
+| [**&#9660;**](#powershell) | [**`pwsh.exe`**][pwsh_cli] |  [`build.ps1`](./enum-Planet/build.ps1) | - | Any |
+| [**&#9660;**](#sbt) | [**`sbt.bat`**][sbt_cli] | [`build.sbt`](./enum-Planet/build.sbt) | n.a.                                         | Any |
 | [**&#9660;**](#scala_cli) | [**`scala-cli.exe`**][scala_cli] | | | Any |
-| [**&#9660;**](#shell) | [**`sh.exe`**][sh_cli] | [**`build.sh`**](enum-Planet/build.sh)<br/>([**`build.properties`**](enum-Planet/project/build.properties)) |                   | [Cygwin]/[MSYS2]/Unix only |
+| [**&#9660;**](#shell) | [**`sh.exe`**][sh_cli] | [**`build.sh`**](./enum-Planet/build.sh)<br/>([**`build.properties`**](enum-Planet/project/build.properties)) |                   | [Cygwin]/[MSYS2]/Unix only |
 <div style="margin:0 10% 0 8px;font-size:80%;">
 <b><sup>a)</sup></b> Here "Any" means "tested on Windows, Cygwin, MSYS2 and Unix".<br/>
 <b><sup>b)</sup></b> This utility batch file manages <a href="https://maven.apache.org/" rel="external">Maven</a> dependencies and returns the associated Java class path (as environment variable).<br/>
@@ -124,6 +124,7 @@ BUILD SUCCESSFUL
 Total time: 14 seconds
 </pre>
 
+<!--=======================================================================-->
 
 ## <span id="batch">Batch command</span> <sup><sub>[**&#9650;**](#top)</sub></sup>
 
@@ -474,6 +475,7 @@ Your weight on NEPTUNE (7) is 1.1383280724696578
 >             [..]
 > </pre>
 
+<!--=======================================================================-->
 
 ## <span id="mill">Mill build tool</span> <sup><sub>[**&#9650;**](#top)</sub></sup>
 
@@ -509,9 +511,39 @@ Your weight on NEPTUNE (7) is 1.1383280724696578
 > [...]
 > </pre>
 
+<!--=======================================================================-->
+
+## <span id="powershell">PowerShell build tool</span> [**&#x25B4;**](#top)
+
+The PowerShell build file [**`build.ps1`**](./enum-Planet/build.ps1) is written in [PowerShell].
+
+> **:mag_right:** We require either Windows PowerShell 5.1 or PowerShell 7. See the Microsoft online documentaion about the ["Differences between Windows PowerShell 5.1 and PowerShell 7.x"][powershell_differences]).
+
+Command **<code>[pwsh.exe][pwsh_cli] -verbose clean run</code>** reads the build file [`build.ps1`](./enum-Planet/build.ps1) and produces the following output:
+
+<pre style="font-size:80%;">
+<b>&gt; <a href="https://powershellexplained.com/2017-12-29-Powershell-what-is-pwsh/" rel="external">pwsh</a> -f <a href="./enum-Planet/build.ps1">build.ps1</a> -verbose clean run</b>
+<span style="color:#b86d29;">VERBOSE: Delete directory "target"
+VERBOSE: Compile 1 Scala source file to directory "target\classes"
+VERBOSE: Execute Scala main class "Planet"</span>
+Mass of earth is 0.1020132025669991
+Your weight on MERCURY (0) is 0.37775761520093526
+Your weight on VENUS (1) is 0.9049990998410455
+Your weight on EARTH (2) is 0.9999999999999999
+Your weight on MARS (3) is 0.37873718403712886
+Your weight on JUPITER (4) is 2.5305575254957406
+Your weight on SATURN (5) is 1.0660155388115666
+Your weight on URANUS (6) is 0.9051271993894251
+Your weight on NEPTUNE (7) is 1.1383280724696578
+</pre>
+
+Command **<code>[pwsh.exe][pwsh_cli] clean run</code>** with option <code>-debug</code> produces additional debug information :
+
+<!--=======================================================================-->
+
 ## <span id="sbt">SBT build tool</span> [**&#x25B4;**](#top)
 
-The SBT build file [**`build.sbt`**](enum-Planet/build.sbt) is written in [Scala] and obeys the [sbt build definitions][sbt_docs_defs].
+The SBT build file [**`build.sbt`**](./enum-Planet/build.sbt) is written in [Scala] and obeys the [sbt build definitions][sbt_docs_defs].
 
 > **:mag_right:** [Lightbend] provides commercial support for the [**`sbt`**][sbt_cli] build tool.
 
@@ -718,9 +750,11 @@ public final class main {
 [microsoft_powershell]: https://docs.microsoft.com/en-us/powershell/scripting/getting-started/getting-started-with-windows-powershell?view=powershell-6
 [make]: https://en.wikipedia.org/wiki/Make_(software)
 [man1_diff]: https://www.linux.org/docs/man1/diff.html
-[mill_cli]: https://www.lihaoyi.com/mill/#command-line-tools
-[mvn_cli]: https://maven.apache.org/ref/3.6.3/maven-embedder/cli.html
+[mill_cli]: https://mill-build.org/mill/cli/flags.html
+[mvn_cli]: https://maven.apache.org/ref/3.9.16/maven-embedder/cli.html
 [msys2]: https://www.msys2.org/
+[powershell]: https://www.powershell.org/
+[powershell_differences]: https://learn.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell
 [pwsh_cli]: https://powershellexplained.com/2017-12-29-Powershell-what-is-pwsh/
 [sbt_cli]: https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html
 [sbt_docs_defs]: https://www.scala-sbt.org/1.0/docs/Basic-Def.html

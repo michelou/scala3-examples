@@ -25,26 +25,26 @@ $ROOT_DIR = $PSScriptRoot
 $PATH_SEP = [IO.Path]::PathSeparator
 $SEP = [IO.Path]::DirectorySeparatorChar
 
-$SOURCE_DIR = $ROOT_DIR + $SEP + 'src'
-$SOURCE_JAVA_DIR = $SOURCE_DIR + $SEP + 'main' + $SEP + 'java'
-$SOURCE_SCALA_DIR = $SOURCE_DIR + $SEP + 'main' + $SEP + 'scala'
-$TARGET_DIR = $ROOT_DIR + $SEP + 'target'
-$TARGET_DOCS_DIR = $TARGET_DIR + $SEP + 'docs'
-$CLASSES_DIR = $TARGET_DIR + $SEP + 'classes'
+$SOURCE_DIR       = Join-Path -Path $ROOT_DIR   -ChildPath 'src'
+$SOURCE_JAVA_DIR  = Join-Path -Path $SOURCE_DIR -ChildPath 'main', 'java'
+$SOURCE_SCALA_DIR = Join-Path -Path $SOURCE_DIR -ChildPath 'main', 'scala'
+$TARGET_DIR       = Join-Path -Path $ROOT_DIR   -ChildPath 'target'
+$TARGET_DOCS_DIR  = Join-Path -Path $TARGET_DIR -ChildPath 'docs'
+$CLASSES_DIR      = Join-Path -Path $TARGET_DIR -ChildPath 'classes'
 
 $JAVAC_CMD = $Env:JAVA_HOME + $SEP + 'bin' + $SEP + 'javac' + $EXE
 if (! (Test-Path -PathType Leaf -Path $JAVAC_CMD)) {
     $JAVAC_CMD = $null
 }
-$SCALAC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scalac.bat'
+$SCALAC_CMD = $Env:SCALA3_HOME -ChildPath 'bin' + $SEP + 'scalac.bat'
 if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
     $SCALAC3_CMD = $null
 }
-$SCALA_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
+$SCALA_CMD = $Env:SCALA3_HOME -ChildPath 'bin' + $SEP + 'scala.bat'
 if (! (Test-Path -PathType Leaf -Path $SCALA_CMD)) {
     $SCALA_CMD = $null
 }
-$SCALADOC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scaladoc.bat'
+$SCALADOC_CMD = $Env:SCALA3_HOME -ChildPath 'bin' + $SEP + 'scaladoc.bat'
 if (! (Test-Path -PathType Leaf -Path $SCALADOC_CMD)) {
     $SCALADOC_CMD = $null
 }
@@ -99,21 +99,6 @@ $MAIN_NAME = 'ImplicitDemo'
 $MAIN_CLASS = $MAIN_NAME
 $MAIN_ARGS = $null
 
-$SOURCE_MAIN_FILE = $SOURCE_MAIN_DIR + $SEP + $MAIN_NAME + '.scala'
-
-if ($COMMANDS -contains 'Lint') {
-    if (! (Test-Path -PathType Leaf -Path ($Env:GNAT2019_HOME + $SEP + 'bin' + $SEP + 'gnat' + $EXE))) {
-        Write-Warning "GNAT 2019 is required to execute AdaControl"
-        $COMMANDS = $COMMANDS.Replace('Lint', '')
-    } else {
-        $PARENT_DIR = Split-Path -Parent $ROOT_DIR
-        $ARU_FILE = (Get-ChildItem -Path $PARENT_DIR -Filter *.aru) | Select-Object -First 1 -ExpandProperty FullName
-        if (! (Test-Path -PathType Leaf -Path $ARU_FILE)) {
-            Write-Warning "ARU file not found"
-            $COMMANDS = $COMMANDS.Replace('Lint', '')
-        }
-    }
-}
 Write-Debug "Options    : DEBUG=$DEBUG TIMER=$TIMER VERBOSE=$VERBOSE"
 Write-Debug "Subcommands: $COMMANDS"
 if ($Env:CFR_HOME) { Write-Debug "Variables  : ""CFR_HOME=$Env:CFR_HOME""" }
@@ -121,7 +106,7 @@ Write-Debug "Variables  : ""GIT_HOME=$Env:GIT_HOME"""
 Write-Debug "Variables  : ""JAVA_HOME=$Env:JAVA_HOME"""
 Write-Debug "Variables  : ""SCALA_HOME=$Env:SCALA_HOME"""
 Write-Debug "Variables  : ""SCALA3_HOME=$Env:SCALA3_HOME"""
-Write-Debug "Variables  : MAIN_NAME=$MAIN_NAME MAIN_ARGS=$MAIN_ARGS"
+Write-Debug "Variables  : MAIN_NAME=$MAIN_NAME MAIN_CLASS=$MAIN_CLASS MAIN_ARGS=$MAIN_ARGS"
 Write-Debug "Variables  : PROJECT_NAME=$PROJECT_NAME"
 
 if ($TIMER) { $TIMER_START = Get-Date }
@@ -169,7 +154,7 @@ function Clean
 function Delete-Dir
 {
     param (
-        [string] $dir
+        [string]$dir
     )
     if (Test-Path -PathType Container -Path $dir) {
         Write-Debug "[System.IO.Directory]::Delete('$dir', $true)"
@@ -195,7 +180,7 @@ function Compile
     if (! (Test-Path -PathType Container -Path $CLASSES_DIR)) {
         $_ = New-Item -ItemType Directory -Path $CLASSES_DIR
     }
-    $TIMESTAMP_FILE = $TARGET_DIR + $SEP + '.latest-build'
+    $TIMESTAMP_FILE = Join-Path -Path $TARGET_DIR -ChildPath '.latest-build'
     if (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$SOURCE_JAVA_DIR" '*.java') {
         Compile-Java
     }
@@ -208,9 +193,9 @@ function Compile
 function Test-Action-Required
 {
     param (
-        [string] $FilePath,
-        [string] $DirPath,
-        [string] $Pattern
+        [string]$FilePath,
+        [string]$DirPath,
+        [string]$Pattern
     )
     $REQUIRED = $false
     if (Test-Path -PathType Container -Path $DirPath) {
@@ -228,7 +213,7 @@ function Test-Action-Required
 
 function Compile-Java
 {
-    $OPTS_FILE = $TARGET_DIR + $SEP + 'javac_opts.txt'
+    $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
     Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
@@ -241,7 +226,7 @@ function Compile-Java
     } elseif ($N -eq 1) { $N_FILES = "$N Java source file"
     } else { $N_FILES = "$N Java source files"
     }
-    $SOURCES_FILE = $TARGET_DIR + $SEP + 'javac_sources.txt'
+    $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_sources.txt'
     Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$JAVAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
@@ -256,7 +241,7 @@ function Compile-Java
 
 function Compile-Scala
 {
-    $OPTS_FILE = $TARGET_DIR + $SEP + 'scalac_opts.txt'
+    $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
     Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
@@ -269,7 +254,7 @@ function Compile-Scala
     } elseif ($N -eq 1) { $N_FILES = "$N Scala source file"
     } else { $N_FILES = "$N Scala source files"
     }
-    $SOURCES_FILE = $TARGET_DIR + $SEP + 'scalac_sources.txt'
+    $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_sources.txt'
     Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$SCALAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
@@ -286,7 +271,7 @@ function Build-Classpath
 {
     $CPATH = $null
 
-    $REPO_DIR = $Env:USERPROFILE + $SEP + '.m2' + $SEP + 'repository'
+    $REPO_DIR = Join-Path -Path $Env:USERPROFILE -ChildPath '.m2', 'repository'
     if (! (Test-Path -PathType Container -PATH $REPO_DIR)) {
         Write-Error "Maven local repository not found"
         set $EXITCODE = 1
@@ -308,17 +293,17 @@ function Doc
     if (! (Test-Path -PathType Container -Path $TARGET_DOCS_DIR)) {
         $_ = New-Item -ItemType Directory -Path $TARGET_DOCS_DIR
     }
-    $TIMESTAMP_FILE = $TARGET_DOCS_DIR +$SEP + '.latest-build'
+    $TIMESTAMP_FILE = Join-Path -Path $TARGET_DOCS_DIR -ChildPath '.latest-build'
     if (! (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$CLASSES_DIR" '*.tasty')) { return }
 
-    $SOURCES_FILE = $TARGET_DIR + $SEP + 'scaladoc_sources.txt'
+    $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scaladoc_sources.txt'
     if (Test-Path -Path $SOURCES_FILE) { Remove-Item $SOURCES_FILE }
 
     $FILES = (Get-ChildItem -Path $CLASSES_DIR -Include "*.tasty" -Recurse).FullName
     Write-Output > $SOURCES_FILE
 
-    $OPTS_FILE = $TARGET_DIR + $SEP + 'scaladoc_opts.txt'
-    Write-Output "-d ""$($TARGET_DOCS_DIR.Replace($SEP,$SEP + $SEP))"" -project ""$PROJECT_NAME"" -project-version ""$PROJECT_VERSION""" > $OPTS_FILE
+    $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scaladoc_opts.txt'
+    Write-Output "-d ""$($TARGET_DOCS_DIR.Replace($SEP, $SEP + $SEP))"" -project ""$PROJECT_NAME"" -project-version ""$PROJECT_VERSION""" > $OPTS_FILE
     Write-Debug "$SCALADOC_CMD @$OPTS_FILE @$SOURCES_FILE"
     Write-Verbose "Generate HTML documentation into directory ""$($TARGET_DOCS_DIR.Replace($ROOT_DIR, ''))"""
 
@@ -335,7 +320,7 @@ function Doc
 
 function Run
 {
-    $MAIN_CLASS_FILE = $CLASSES_DIR + $SEP + $MAIN_CLASS.Replace('.', $SEP) + '.class'
+    $MAIN_CLASS_FILE = Join-Path -Path $CLASSES_DIR -ChildPath $($MAIN_CLASS.Replace('.', $SEP) + '.class')
     if (! (Test-Path -PathType Leaf -Path $MAIN_CLASS_FILE)) {
         Write-Error "Scala main class ""$MAIN_CLASS"" not found ($MAIN_CLASS_FILE)"
         Cleanup 1
@@ -345,7 +330,7 @@ function Run
     $SCALA_OPTS = "-classpath ""$CPATH"""
 
     Write-Debug """$SCALA_CMD"" $SCALA_OPTS $MAIN_CLASS $MAIN_ARGS"
-    Write-Verbose "Execute Scala main class $MAIN_CLASS"
+    Write-Verbose "Execute Scala main class ""$MAIN_CLASS"""
     &"$SCALA_CMD" -classpath "$CPATH" $MAIN_CLASS $MAIN_ARGS
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to execute Scala main class ""$MAIN_CLASS"""
@@ -370,7 +355,7 @@ function Test
 function Cleanup
 {
     param (
-        [int] $ExitCode
+        [int]$ExitCode
     )
     Write-Debug "ExitCode=$ExitCode"
     exit $ExitCode

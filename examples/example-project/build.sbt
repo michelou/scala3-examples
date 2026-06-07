@@ -1,4 +1,4 @@
-val dottyVersion = "3.3.5"
+val dottyVersion = "3.3.8-RC2"
 // val dottyVersion = dottyLatestNightlyBuild.get 
 
 lazy val root = project
@@ -19,6 +19,6 @@ lazy val root = project
 
     libraryDependencies ++= Seq(
       // https://mvnrepository.com/artifact/org.scala-lang.modules/scala-xml_2.13
-      "org.scala-lang.modules" %% "scala-xml" % "2.3.0"
+      "org.scala-lang.modules" %% "scala-xml" % "2.4.0"
     ) //.withDottyCompat(scalaVersion.value)
   )

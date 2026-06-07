@@ -6,31 +6,31 @@ object Main:
     val xs: List[String] = List("d", "o", "t", "t", "y")
 
     xs.map(s => print(s": $s "))
-    println
+    println()
 
     xs.zipWithIndex.map((s, i) => print(s"$i: $s "))
-    println
+    println()
 
   def test02: Unit =
     val xs: List[(String, Int, Int)] =
       List(("d", 0, -1), ("o", 1, -2), ("t", 2, -3), ("t", 3, -4), ("y", 4, -5))
 
     xs.map((s, i, j) => print(s"$i,$j: $s "))
-    println
+    println()
 
     def f1(s: String, i: Int, j: Int): Unit = print(s"$i,$j: $s ")
     xs.map(f1)
-    println
+    println()
 
     def f2(triple: (String, Int, Int)): Unit =
       val (s, i, j) = triple; print(s"$i,$j: $s ")
     xs.map(f2)
-    println
+    println()
 
   private def runExample(name: String)(f: => Unit) =
     println(Console.MAGENTA + s"$name example:" + Console.RESET)
     f
-    println
+    println()
 
   def main(args: Array[String]): Unit =
     runExample("test01")(test01)

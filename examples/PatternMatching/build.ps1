@@ -25,20 +25,22 @@ $ROOT_DIR = $PSScriptRoot
 $PATH_SEP = [IO.Path]::PathSeparator
 $SEP = [IO.Path]::DirectorySeparatorChar
 
-$SOURCE_DIR = $ROOT_DIR + $SEP + 'src'
-$SOURCE_JAVA_DIR = $SOURCE_DIR + $SEP + 'main' + $SEP + 'java'
-$SOURCE_SCALA_DIR = $SOURCE_DIR + $SEP + 'main' + $SEP + 'scala'
-$TARGET_DIR = $ROOT_DIR + $SEP + 'target'
-$TARGET_DOCS_DIR = $TARGET_DIR + $SEP + 'docs'
-$CLASSES_DIR = $TARGET_DIR + $SEP + 'classes'
+$SOURCE_DIR       = Join-Path -Path $ROOT_DIR   -ChildPath 'src'
+$SOURCE_JAVA_DIR  = Join-Path -Path $SOURCE_DIR -ChildPath 'main', 'java'
+$SOURCE_SCALA_DIR = Join-Path -Path $SOURCE_DIR -ChildPath 'main', 'scala'
+$TARGET_DIR       = Join-Path -Path $ROOT_DIR   -ChildPath 'target'
+$TARGET_DOCS_DIR  = Join-Path -Path $TARGET_DIR -ChildPath 'docs'
+$CLASSES_DIR      = Join-Path -Path $TARGET_DIR -ChildPath 'classes'
 
 $JAVAC_CMD = $Env:JAVA_HOME + $SEP + 'bin' + $SEP + 'javac' + $EXE
 if (! (Test-Path -PathType Leaf -Path $JAVAC_CMD)) {
-    $JAVAC_CMD = $null
+    Write-Error "Java compiler not found"
+    Cleanup 1
 }
 $SCALAC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scalac.bat'
 if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
-    $SCALAC3_CMD = $null
+    Write-Error "Scala 3 compiler not found"
+    Cleanup 1
 }
 $SCALA_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
 if (! (Test-Path -PathType Leaf -Path $SCALA_CMD)) {
@@ -99,8 +101,6 @@ $MAIN_NAME = 'Main'
 $MAIN_CLASS = $MAIN_NAME
 $MAIN_ARGS = $null
 
-$SOURCE_MAIN_FILE = $SOURCE_MAIN_DIR + $SEP + $MAIN_NAME + '.scala'
-
 Write-Debug "Options    : DEBUG=$DEBUG TIMER=$TIMER VERBOSE=$VERBOSE"
 Write-Debug "Subcommands: $COMMANDS"
 if ($Env:CFR_HOME) { Write-Debug "Variables  : ""CFR_HOME=$Env:CFR_HOME""" }
@@ -108,7 +108,7 @@ Write-Debug "Variables  : ""GIT_HOME=$Env:GIT_HOME"""
 Write-Debug "Variables  : ""JAVA_HOME=$Env:JAVA_HOME"""
 Write-Debug "Variables  : ""SCALA_HOME=$Env:SCALA_HOME"""
 Write-Debug "Variables  : ""SCALA3_HOME=$Env:SCALA3_HOME"""
-Write-Debug "Variables  : MAIN_NAME=$MAIN_NAME MAIN_ARGS=$MAIN_ARGS"
+Write-Debug "Variables  : MAIN_NAME=$MAIN_NAME MAIN_CLASS=$MAIN_CLASS MAIN_ARGS=$MAIN_ARGS"
 Write-Debug "Variables  : PROJECT_NAME=$PROJECT_NAME"
 
 if ($TIMER) { $TIMER_START = Get-Date }
@@ -156,7 +156,7 @@ function Clean
 function Delete-Dir
 {
     param (
-        [string] $dir
+        [string]$dir
     )
     if (Test-Path -PathType Container -Path $dir) {
         Write-Debug "[System.IO.Directory]::Delete('$dir', $true)"
@@ -182,7 +182,7 @@ function Compile
     if (! (Test-Path -PathType Container -Path $CLASSES_DIR)) {
         $_ = New-Item -ItemType Directory -Path $CLASSES_DIR
     }
-    $TIMESTAMP_FILE = $TARGET_DIR + $SEP + '.latest-build'
+    $TIMESTAMP_FILE = Join-Path -Path $TARGET_DIR -ChildPath '.latest-build'
     if (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$SOURCE_JAVA_DIR" '*.java') {
         Compile-Java
     }
@@ -195,9 +195,9 @@ function Compile
 function Test-Action-Required
 {
     param (
-        [string] $FilePath,
-        [string] $DirPath,
-        [string] $Pattern
+        [string]$FilePath,
+        [string]$DirPath,
+        [string]$Pattern
     )
     $REQUIRED = $false
     if (Test-Path -PathType Container -Path $DirPath) {
@@ -215,7 +215,7 @@ function Test-Action-Required
 
 function Compile-Java
 {
-    $OPTS_FILE = $TARGET_DIR + $SEP + 'javac_opts.txt'
+    $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
     Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
@@ -228,7 +228,7 @@ function Compile-Java
     } elseif ($N -eq 1) { $N_FILES = "$N Java source file"
     } else { $N_FILES = "$N Java source files"
     }
-    $SOURCES_FILE = $TARGET_DIR + $SEP + 'javac_sources.txt'
+    $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_sources.txt'
     Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$JAVAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
@@ -243,7 +243,7 @@ function Compile-Java
 
 function Compile-Scala
 {
-    $OPTS_FILE = $TARGET_DIR + $SEP + 'scalac_opts.txt'
+    $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
     Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
@@ -256,7 +256,7 @@ function Compile-Scala
     } elseif ($N -eq 1) { $N_FILES = "$N Scala source file"
     } else { $N_FILES = "$N Scala source files"
     }
-    $SOURCES_FILE = $TARGET_DIR + $SEP + 'scalac_sources.txt'
+    $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_sources.txt'
     Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$SCALAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
@@ -357,7 +357,7 @@ function Test
 function Cleanup
 {
     param (
-        [int] $ExitCode
+        [int]$ExitCode
     )
     Write-Debug "ExitCode=$ExitCode"
     exit $ExitCode

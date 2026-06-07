@@ -5,9 +5,6 @@
 # Licensed under the MIT License.
 #
 
-## https://powershellisfun.com/2023/04/24/using-the-requires-statement-in-powershell/
-#Requires -Version 5.1
-
 ## only for interactive debugging !
 $DEBUG = $false
 
@@ -26,11 +23,11 @@ if ($PSVersionTable.PSVersion -lt "6.0" -or $IsWindows) {
 $BASENAME = (Get-Item $PSScriptRoot).Basename
 $ROOT_DIR = $PSScriptRoot
 $PATH_SEP = [IO.Path]::PathSeparator
-$SEP      = [IO.Path]::DirectorySeparatorChar
+$SEP = [IO.Path]::DirectorySeparatorChar
 
 $SOURCE_DIR       = Join-Path -Path $ROOT_DIR   -ChildPath 'src'
-$SOURCE_JAVA_DIR  = [IO.Path]::Combine($SOURCE_DIR, 'main', 'java')
-$SOURCE_SCALA_DIR = [IO.Path]::Combine($SOURCE_DIR, 'main', 'scala')
+$SOURCE_JAVA_DIR  = Join-Path -Path $SOURCE_DIR -ChildPath 'main', 'java'
+$SOURCE_SCALA_DIR = Join-Path -Path $SOURCE_DIR -ChildPath 'main', 'scala'
 $TARGET_DIR       = Join-Path -Path $ROOT_DIR   -ChildPath 'target'
 $TARGET_DOCS_DIR  = Join-Path -Path $TARGET_DIR -ChildPath 'docs'
 $CLASSES_DIR      = Join-Path -Path $TARGET_DIR -ChildPath 'classes'
@@ -54,9 +51,8 @@ if (! (Test-Path -PathType Leaf -Path $SCALADOC_CMD)) {
     $SCALADOC_CMD = $null
 }
 
-$PS_VERSION = $PSVersionTable.PSVersion.ToString()
 $PROJECT_NAME = $BASENAME
-$PROJECT_VERSION = '1.0-SNAPSHOT'
+$PROJECT_VERSION = '"1.0-SNAPSHOT'
 
 #########################################################################
 ## Script arguments
@@ -64,7 +60,7 @@ $PROJECT_VERSION = '1.0-SNAPSHOT'
 $COMMANDS = @()
 
 ## Possible values: SilentlyContinue, Stop, Continue, Inquire, Ignore, Suspend
-$DebugPreference   = 'SilentlyContinue'
+$DebugPreference = 'SilentlyContinue'
 $VerbosePreference = 'SilentlyContinue'
 $WarningPreference = 'Continue'
 
@@ -106,7 +102,6 @@ $MAIN_NAME = 'Main'
 $MAIN_CLASS = $MAIN_NAME
 $MAIN_ARGS = $null
 
-Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION PS_VERSION=$PS_VERSION"
 Write-Debug "Options    : DEBUG=$DEBUG TIMER=$TIMER VERBOSE=$VERBOSE"
 Write-Debug "Subcommands: $COMMANDS"
 if ($Env:CFR_HOME) { Write-Debug "Variables  : ""CFR_HOME=$Env:CFR_HOME""" }
@@ -115,6 +110,7 @@ Write-Debug "Variables  : ""JAVA_HOME=$Env:JAVA_HOME"""
 Write-Debug "Variables  : ""SCALA_HOME=$Env:SCALA_HOME"""
 Write-Debug "Variables  : ""SCALA3_HOME=$Env:SCALA3_HOME"""
 Write-Debug "Variables  : MAIN_NAME=$MAIN_NAME MAIN_CLASS=$MAIN_CLASS MAIN_ARGS=$MAIN_ARGS"
+Write-Debug "Variables  : PROJECT_NAME=$PROJECT_NAME"
 
 if ($TIMER) { $TIMER_START = Get-Date }
 
@@ -155,22 +151,22 @@ function Print-Help
 
 function Clean
 {
-    Delete-Directory -DirPath $TARGET_DIR
+    Delete-Dir $TARGET_DIR
 }
 
-function Delete-Directory
+function Delete-Dir
 {
     param (
-        [string] $DirPath
+        [string] $dirPath
     )
-    if (Test-Path -PathType Container -Path $DirPath) {
-        Write-Debug "[System.IO.Directory]::Delete('$DirPath', $true)"
-        Write-Verbose "Delete directory ""$($DirPath.Replace($ROOT_DIR + $SEP, ''))"""
+    if (Test-Path -PathType Container -Path $dirPath) {
+        Write-Debug "[System.IO.Directory]::Delete('$dirPath', $true)"
+        Write-Verbose "Delete directory ""$($dirPath.Replace($ROOT_DIR + $SEP, ''))"""
         try {
-            #[System.IO.Directory]::Delete($DirPath, $true)
-            Remove-Item -Path $DirPath -Force -Recurse
+            #[System.IO.Directory]::Delete($dirPath, $true)
+            Remove-Item -Path $dirPath -Force -Recurse
         } catch {
-            Write-Error "Failed to delete directory ""$($DirPath.Replace($ROOT_DIR + $SEP, ''))"""
+            Write-Error "Failed to delete directory ""$($dirPath.Replace($ROOT_DIR + $SEP, ''))"""
             $EXITCODE = 1
             return
         }
@@ -188,10 +184,10 @@ function Compile
         $_ = New-Item -ItemType Directory -Path $CLASSES_DIR
     }
     $TIMESTAMP_FILE = Join-Path -Path $TARGET_DIR -ChildPath '.latest-build'
-    if (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$SOURCE_JAVA_DIR" -Pattern '*.java') {
+    if (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$SOURCE_JAVA_DIR" '*.java') {
         Compile-Java
     }
-    if (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$SOURCE_SCALA_DIR" -Pattern '*.scala') {
+    if (Test-Action-Required -FilePath "$TIMESTAMP_FILE" -DirPath "$SOURCE_SCALA_DIR" '*.scala') {
         Compile-Scala
     }
     $_ = New-Item -ItemType File -Path $TIMESTAMP_FILE -Force
@@ -200,21 +196,21 @@ function Compile
 function Test-Action-Required
 {
     param (
-        [string] $FilePath,
-        [string] $DirPath,
-        [string] $Pattern
+        [string] $filePath,
+        [string] $dirPath,
+        [string] $pattern
     )
     $REQUIRED = $false
-    if (Test-Path -PathType Container -Path $DirPath) {
-        if (Test-Path -PathType Leaf -Path $FilePath) {
-            $FILE_LAST_TIME = (Get-Item $FilePath).LastWriteTime
-            $DIR_LAST_TIME = (Get-ChildItem -Path $DirPath -Include $Pattern -Recurse | Sort LastWriteTime | Select -Last 1).LastWriteTime
+    if (Test-Path -PathType Container -Path $dirPath) {
+        if (Test-Path -PathType Leaf -Path $filePath) {
+            $FILE_LAST_TIME = (Get-Item $filePath).LastWriteTime
+            $DIR_LAST_TIME = (Get-ChildItem -Path $dirPath -Include $pattern -Recurse | Sort LastWriteTime | Select -Last 1).LastWriteTime
             $REQUIRED = $FILE_LAST_TIME -lt $DIR_LAST_TIME
         } else {
             $REQUIRED = $true
         }
     }
-    Write-Debug "REQUIRED=$REQUIRED ($Pattern)"
+    Write-Debug "REQUIRED=$REQUIRED ($pattern)"
     return $REQUIRED
 }
 
@@ -223,8 +219,7 @@ function Compile-Java
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
-    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
-    [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
+    Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
 
     $FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
     $N = $FILES.Count
@@ -235,8 +230,7 @@ function Compile-Java
     } else { $N_FILES = "$N Java source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_sources.txt'
-    #Write-Output $FILES > $SOURCES_FILE
-    [System.IO.File]::WriteAllLines($SOURCES_FILE, $FILES)
+    Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$JAVAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
     Write-Verbose "Compile $N_FILES to directory ""$($CLASSES_DIR.Replace($ROOT_DIR + $SEP, ''))"""
@@ -253,8 +247,7 @@ function Compile-Scala
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
-    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
-    [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
+    Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
 
     $FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
     $N = $FILES.Count
@@ -265,8 +258,7 @@ function Compile-Scala
     } else { $N_FILES = "$N Scala source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_sources.txt'
-    #Write-Output $FILES > $SOURCES_FILE
-    [System.IO.File]::WriteAllLines($SOURCES_FILE, $FILES)
+    Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$SCALAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
     Write-Verbose "Compile $N_FILES to directory ""$($CLASSES_DIR.Replace($ROOT_DIR + $SEP, ''))"""
@@ -282,7 +274,7 @@ function Build-Classpath
 {
     $CPATH = $null
 
-    $REPO_DIR = [IO.Path]::Combine($Env:USERPROFILE, '.m2', 'repository')
+    $REPO_DIR = Join-Path -Path $Env:USERPROFILE -ChildPath '.m2', 'repository'
     if (! (Test-Path -PathType Container -PATH $REPO_DIR)) {
         Write-Error "Maven local repository not found"
         set $EXITCODE = 1
@@ -366,10 +358,10 @@ function Test
 function Cleanup
 {
     param (
-        [int] $ExitCode
+        [int] $exitCode
     )
-    Write-Debug "ExitCode=$ExitCode"
-    exit $ExitCode
+    Write-Debug "exitCode=$exitCode"
+    exit $exitCode
 }
 
 #########################################################################

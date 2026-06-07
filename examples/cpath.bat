@@ -30,9 +30,9 @@ set __SCALA_BINARY_VERSION=2.13
 @rem https://mvnrepository.com/artifact/org.scala-lang.modules/scala-xml
 set __SCALA_XML_VERSION=2.4.0
 @rem https://mvnrepository.com/artifact/org.scalatest/scalatest
-set __SCALATEST_VERSION=3.2.19
+set __SCALATEST_VERSION=3.2.20
 @rem https://mvnrepository.com/artifact/org.specs2/specs2-core
-set __SPECS2_VERSION=5.7.0
+set __SPECS2_VERSION=5.9.0
 
 @rem #########################################################################
 @rem ## Libraries to be added to _LIBS_CPATH

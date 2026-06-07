@@ -102,8 +102,8 @@ foreach ($ARG in $args) {
     }
 }
 ## Source name and class name may differ
-$MAIN_NAME = 'Main'
-$MAIN_CLASS = $MAIN_NAME
+$MAIN_NAME = 'HelloWorld'
+$MAIN_CLASS = 'myexamples.' + $MAIN_NAME
 $MAIN_ARGS = $null
 
 Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION PS_VERSION=$PS_VERSION"
