@@ -29,7 +29,7 @@ object Graphics:
 
 @main def Main: Unit =
   SocialNetwork.main
-  println
+  println()
 
   import SocialNetwork.Name
 
@@ -38,7 +38,7 @@ object Graphics:
 
   println(s"name      =$name")
   println(s"nameLength=$nameLength")
-  println
+  println()
 
   import Graphics._
 

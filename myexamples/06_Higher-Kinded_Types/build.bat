@@ -45,7 +45,10 @@ if %_DOC%==1 (
     call :doc
     if not !_EXITCODE!==0 goto end
 )
-if %_RUN%==1 (
+if %_RUN_JAVA%==1 (
+    call :run_java
+    if not !_EXITCODE!==0 goto end
+) else if %_RUN%==1 (
     call :run%_INSTRUMENTED%
     if not !_EXITCODE!==0 goto end
 )
@@ -225,6 +228,7 @@ set _LINT=0
 set _MAIN_CLASS=%_MAIN_CLASS_DEFAULT%
 set _MAIN_ARGS=%_MAIN_ARGS_DEFAULT%
 set _RUN=0
+set _RUN_JAVA=0
 set _SCALA_CLI=
 set _SCALA_VERSION=%_SCALA_VERSION_DEFAULT%
 set _SCALAC_OPTS=-deprecation -feature
@@ -234,6 +238,7 @@ set _SCALAC_OPTS_PRINT=0
 set _TASTY=0
 set _TEST=0
 set _TIMER=0
+set _USE_RC=0
 set _VERBOSE=0
 set __N=0
 :args_loop
@@ -250,6 +255,7 @@ if "%__ARG:~0,1%"=="-" (
     ) else if "%__ARG%"=="-explain-types" ( set _SCALAC_OPTS_EXPLAIN_TYPES=1
     ) else if "%__ARG%"=="-help" ( set _HELP=1
     ) else if "%__ARG%"=="-print" ( set _SCALAC_OPTS_PRINT=1
+    ) else if "%__ARG%"=="-rc" ( set _USE_RC=1
     ) else if "%__ARG%"=="-scala2" ( set _SCALA_VERSION=2
     ) else if "%__ARG%"=="-scala3" ( set _SCALA_VERSION=3
     ) else if "%__ARG%"=="-tasty" ( set _TASTY=1
@@ -324,19 +330,38 @@ if %_SCALAC_OPTS_PRINT%==1 (
     ) else ( set _SCALAC_OPTS=%_SCALAC_OPTS% -print
     )
 )
+if %_USE_RC%==1 (
+    if %_SCALA_VERSION%==3 (
+        if exist "%SCALA3_RC_HOME%\bin\scalac.bat" (
+            set "_SCALA_CMD=%SCALA3_RC_HOME%\bin\scala.bat"
+            set "_SCALAC_CMD=%SCALA3_RC_HOME%\bin\scalac.bat"
+            set "_SCALADOC_CMD=%SCALA3_RC_HOME%\bin\scaladoc.bat"
+        ) else (
+            echo %_WARNING_LABEL% Scala 3 release candidate not found ^(use default version^) 1>&2
+            set _USE_RC=0
+        )
+    )
+)
+set __LAMP=
+for /f "delims=" %%f in ('call "%_SCALA_CMD%" -version 2^>^&1 ^| findstr "LAMP"') do (
+    if not defined __LAMP set __LAMP=1
+)
+if not defined __LAMP set _RUN_JAVA=1
+
 if %_TASTY%==1 if not %_SCALA_VERSION%==3 (
     echo %_WARNING_LABEL% Option '-tasty' only supported by Scala 3 1>&2
     set _TASTY=0
 )
 if %_DEBUG%==1 (
     echo %_DEBUG_LABEL% Properties : _PROJECT_NAME=%_PROJECT_NAME% _PROJECT_VERSION=%_PROJECT_VERSION% 1>&2
-    echo %_DEBUG_LABEL% Options    : _EXPLAIN=%_SCALAC_OPTS_EXPLAIN% _INSTRUMENTED=%_INSTRUMENTED% _PRINT=%_SCALAC_OPTS_PRINT% _SCALA_VERSION=%_SCALA_VERSION% _TASTY=%_TASTY% _TIMER=%_TIMER% _VERBOSE=%_VERBOSE% 1>&2
+    echo %_DEBUG_LABEL% Options    : _EXPLAIN=%_SCALAC_OPTS_EXPLAIN% _INSTRUMENTED=%_INSTRUMENTED% _PRINT=%_SCALAC_OPTS_PRINT% _SCALA_VERSION=%_SCALA_VERSION% _TASTY=%_TASTY% _TIMER=%_TIMER% _USE_RC=%_USE_RC% _VERBOSE=%_VERBOSE% 1>&2
     echo %_DEBUG_LABEL% Subcommands: _CLEAN=%_CLEAN% _COMPILE=%_COMPILE% _DECOMPILE=%_DECOMPILE% _DOC=%_DOC% _LINT=%_LINT% _RUN=%_RUN% _TEST=%_TEST% 1>&2
     if defined _CFR_CMD echo %_DEBUG_LABEL% Variables  : "CFR_HOME=%CFR_HOME%" 1>&2
     echo %_DEBUG_LABEL% Variables  : "JAVA_HOME=%JAVA_HOME%" 1>&2
     if defined _SCALA_CLI_CMD echo %_DEBUG_LABEL% Variables  : "SCALA_CLI_HOME=%SCALA_CLI_HOME%" 1>&2
     echo %_DEBUG_LABEL% Variables  : "SCALA_HOME=%SCALA_HOME%" 1>&2
     echo %_DEBUG_LABEL% Variables  : "SCALA3_HOME=%SCALA3_HOME%" 1>&2
+    if defined SCALA3_RC_HOME echo %_DEBUG_LABEL% Variables  : "SCALA3_RC_HOME=%SCALA3_RC_HOME%" 1>&2
     echo %_DEBUG_LABEL% Variables  : _MAIN_CLASS=%_MAIN_CLASS% _MAIN_ARGS=%_MAIN_ARGS% 1>&2
 )
 if %_TIMER%==1 for /f "delims=" %%i in ('call "%_PWSH_CMD%" -c "(Get-Date)"') do set _TIMER_START=%%i
@@ -362,6 +387,7 @@ echo     %__BEG_O%-explain%__END%         set compiler option %__BEG_O%-explain%
 echo     %__BEG_O%-explain-types%__END%   set compiler option %__BEG_O%-explain-types%__END%
 echo     %__BEG_O%-main:^<name^>%__END%     define main class name ^(default: %__BEG_O%%_MAIN_CLASS_DEFAULT%%__END%^)
 echo     %__BEG_O%-print%__END%           print IR after compilation phase 'lambdaLift'
+echo     %__BEG_O%-rc%__END%              use Scala 3 release candidate if available
 echo     %__BEG_O%-scala2%__END%          use Scala 2 tools
 echo     %__BEG_O%-scala3%__END%          use Scala 3 tools ^(default^)
 echo     %__BEG_O%-tasty%__END%           compile both from source and TASTy files
@@ -850,6 +876,35 @@ if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_SCALA_CMD%" %__SCALA_OPTS% %_MAIN_CLASS%
 ) else if %_VERBOSE%==1 ( echo Execute Scala main class "%_MAIN_CLASS%" 1>&2
 )
 call "%_SCALA_CMD%" %__SCALA_OPTS% %_MAIN_CLASS% %_MAIN_ARGS%
+if not %ERRORLEVEL%==0 (
+    echo %_ERROR_LABEL% Failed to execute Scala main class "%_MAIN_CLASS%" 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+if %_TASTY%==1 (
+    call :run_tasty
+    if not !_EXITCODE!==0 goto :eof
+)
+goto :eof
+
+:run_java
+set "__MAIN_CLASS_FILE=%_CLASSES_DIR%\%_MAIN_CLASS:.=\%.class"
+if not exist "%__MAIN_CLASS_FILE%" (
+    echo %_ERROR_LABEL% Main class '%_MAIN_CLASS%' not found ^(%__MAIN_CLASS_FILE%^) 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+set "__JAVA_OPTS_FILE=%_TARGET_DIR%\java_opts.txt"
+set __CPATH=
+for /f "delims=" %%f in ('where /r "%SCALA3_RC_HOME%" "*.jar"') do (
+    set "__CPATH=!__CPATH!%%f;"
+)
+echo -classpath %__CPATH%%_CLASSES_DIR% > "%__JAVA_OPTS_FILE%"
+
+if %_DEBUG%==1 ( echo %_DEBUG_LABEL% "%_JAVA_CMD%" "@%__JAVA_OPTS_FILE%" %_MAIN_CLASS% %_MAIN_ARGS% 1>&2
+) else if %_VERBOSE%==1 ( echo Execute Scala main class "%_MAIN_CLASS%" 1>&2
+)
+call "%_JAVA_CMD%" "@%__JAVA_OPTS_FILE%" %_MAIN_CLASS% %_MAIN_ARGS%
 if not %ERRORLEVEL%==0 (
     echo %_ERROR_LABEL% Failed to execute Scala main class "%_MAIN_CLASS%" 1>&2
     set _EXITCODE=1

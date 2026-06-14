@@ -526,7 +526,7 @@ unset CFR_CMD
 [[ -x "$CFR_HOME/bin/cfr" ]] && CFR_CMD="$CFR_HOME/bin/cfr"
 
 PROJECT_NAME="$(basename $ROOT_DIR)"
-PROJECT_URL="github.com/$USER/dotty-examples"
+PROJECT_URL="github.com/$USER/scala3-examples"
 PROJECT_VERSION="1.0-SNAPSHOT"
 
 args "$@"

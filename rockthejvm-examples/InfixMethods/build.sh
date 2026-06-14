@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (c) 2018-2025 Stéphane Micheloud
+# Copyright (c) 2018-2026 Stéphane Micheloud
 #
 # Licensed under the MIT License.
 #
@@ -54,6 +54,7 @@ args() {
         ## options
         -debug)    DEBUG=1 ;;
         -help)     HELP=1 ;;
+        -rc)       USE_RC=1 ;;
         -timer)    TIMER=1 ;;
         -verbose)  VERBOSE=1 ;;
         -*)
@@ -87,11 +88,12 @@ args() {
             LINT=0
         fi
     fi
-    debug "Options    : TIMER=$TIMER VERBOSE=$VERBOSE"
+    debug "Options    : TIMER=$TIMER USE_RC=$USE_RC VERBOSE=$VERBOSE"
     debug "Subcommands: CLEAN=$CLEAN COMPILE=$COMPILE DECOMPILE=$DECOMPILE HELP=$HELP LINT=$LINT RUN=$RUN"
     [[ -n "$CFR_HOME" ]] && debug "Variables  : CFR_HOME=$CFR_HOME"
     debug "Variables  : JAVA_HOME=$JAVA_HOME"
     debug "Variables  : SCALA3_HOME=$SCALA3_HOME"
+    [[ -n "$SCALA3_RC_HOME" ]] && debug "Variables  : SCALA3_RC_HOME=$SCALA3_RC_HOME"
     # See http://www.cyberciti.biz/faq/linux-unix-formatting-dates-for-display/
     [[ $TIMER -eq 1 ]] && TIMER_START=$(date +"%s")
 }
@@ -102,6 +104,7 @@ Usage: $BASENAME { <option> | <subcommand> }
 
   Options:
     -debug       print commands executed by this script
+    -rc          use Scala 3 release candidate if available
     -timer       print total execution time
     -verbose     print progress messages
 
@@ -130,11 +133,11 @@ clean() {
 
 lint() {
     local scalfmt_opts="--test --config $(mixed_path $SCALAFMT_CONFIG_FILE)"
-    $DEBUG && scalfmt_opts="--debug $scalfmt_opts"
+    [[ $DEBUG -eq 1 ]] && scalfmt_opts="--debug $scalfmt_opts"
 
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "$SCALAFMT_CMD $scalfmt_opts $(mixed_path $MAIN_SOURCE_DIR)"
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "Analyze Scala source files with Scalafmt" 1>&2
     fi
     eval "$SCALAFMT_CMD" $scalfmt_opts "$(mixed_path $MAIN_SOURCE_DIR)"
@@ -147,12 +150,12 @@ compile() {
     local timestamp_file="$TARGET_DIR/.latest-build"
 
     local is_required=0
-    is_required="$(action_required "$timestamp_file" "$SOURCE_DIR/main/java/" "*.java")"
+    is_required="$(action_required "$timestamp_file" "$SOURCE_JAVA_DIR/" "*.java")"
     if [[ $is_required -eq 1 ]]; then
         compile_java
         [[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
     fi
-    is_required="$(action_required "$timestamp_file" "$MAIN_SOURCE_DIR/" "*.scala")"
+    is_required="$(action_required "$timestamp_file" "$SOURCE_SCALA_DIR/" "*.scala")"
     if [[ $is_required -eq 1 ]]; then
         compile_scala
         [[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
@@ -176,7 +179,7 @@ action_required() {
         echo 1
     else
         ## Do compile if timestamp file is older than most recent source file
-        if $DEBUG; then
+        if [[ $DEBUG -eq 1 ]]; then
             local timestamp=$(stat -c %Y $timestamp_file)
             local latest_timestamp=$(stat -c %Y $latest_file)
             debug "timestamp=$timestamp latest=$latest_timestamp"
@@ -197,13 +200,13 @@ compile_java() {
     local sources_file="$TARGET_DIR/javac_sources.txt"
     [[ -f "$sources_file" ]] && rm "$sources_file"
     local n=0
-    for f in $(find "$SOURCE_DIR/main/java/" -type f -name "*.java" 2>/dev/null); do
+    for f in $(find "$SOURCE_JAVA_DIR/" -type f -name "*.java" 2>/dev/null); do
         echo $(mixed_path $f) >> "$sources_file"
         n=$((n + 1))
     done
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "$JAVAC_CMD @$(mixed_path $opts_file) @$(mixed_path $sources_file)"
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "Compile $n Java source files to directory \"${CLASSES_DIR/$ROOT_DIR\//}\"" 1>&2
     fi
     eval "$JAVAC_CMD" "@$(mixed_path $opts_file)" "@$(mixed_path $sources_file)"
@@ -224,12 +227,12 @@ compile_scala() {
     local sources_file="$TARGET_DIR/scalac_sources.txt"
     [[ -f "$sources_file" ]] && rm "$sources_file"
     local n=0
-    for f in $(find "$SOURCE_DIR/main/scala/" -type f -name "*.scala" 2>/dev/null); do
+    for f in $(find "$SOURCE_SCALA_DIR/" -type f -name "*.scala" 2>/dev/null); do
         echo $(mixed_path $f) >> "$sources_file"
         n=$((n + 1))
     done
     local print_file_redirect=
-    if $SCALAC_OPTS_PRINT; then
+    if [[ $SCALAC_OPTS_PRINT -eq 1 ]]; then
         # call :version_string
         # if not !_EXITCODE!==0 goto :eof
         local print_file="$TARGET_DIR/scalac-print${VERSION_SUFFIX}.scala"
@@ -239,9 +242,9 @@ compile_scala() {
         #    set __PRINT_FILE_REDIRECT=1^> "$print_file"
         #fi
     fi
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "$SCALAC_CMD @$(mixed_path $opts_file) @$(mixed_path $sources_file)"
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "Compile $n Scala source files to directory \"${CLASSES_DIR/$ROOT_DIR\//}\"" 1>&2
     fi
     eval "$SCALAC_CMD" "@$(mixed_path $opts_file)" "@$(mixed_path $sources_file)"
@@ -254,7 +257,7 @@ compile_scala() {
 mixed_path() {
     if [[ -x "$CYGPATH_CMD" ]]; then
         $CYGPATH_CMD -am $1
-    elif $mingw || $msys; then
+    elif [[ $(($mingw + $msys)) -gt 0 ]]; then
         echo $1 | sed 's|/|\\\\|g'
     else
         echo $1
@@ -272,7 +275,7 @@ decompile() {
         n="$(ls -n $f/*.class 2>/dev/null | wc -l)"
         [[ $n -gt 0 ]] && class_dirs="$class_dirs $f"
     done
-    $VERBOSE && echo "Decompile Java bytecode to directory \"${output_dir/$ROOT_DIR\//}\"" 1>&2
+    [[ $VERBOSE -eq 1 ]] && echo "Decompile Java bytecode to directory \"${output_dir/$ROOT_DIR\//}\"" 1>&2
     for f in $class_dirs; do
         debug "$CFR_CMD $cfr_opts $(mixed_path $f)/*.class"
         exec "$CFR_CMD" $cfr_opts $(mixed_path $f)/\\*.class
@@ -289,9 +292,9 @@ decompile() {
     local output_file="$TARGET_DIR/cfr-sources$version_suffix.java"
     echo "// Compiled with $version_string" > "$output_file"
 
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "cat $output_dir/*.java >> $output_file"
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "Save generated Java source files to file \"${output_file/$ROOT_DIR\//}\"" 1>&2
     fi
     local java_files=
@@ -301,9 +304,9 @@ decompile() {
     [[ -n "$java_files" ]] && cat $java_files >> "$output_file"
 
     if [[ ! -x "$DIFF_CMD" ]]; then
-        if $DEBUG; then
+        if [[ $DEBUG -eq 1 ]]; then
             warning "diff command not found"
-        elif $VERBOSE; then
+        elif [[ $VERBOSE -eq 1 ]]; then
             echo "diff command not found" 1>&2
         fi
         return 0
@@ -312,9 +315,9 @@ decompile() {
 
     local check_file="$SOURCE_DIR/build/cfr-source$version_suffix.java"
     if [[ -f "$check_file" ]]; then
-        if $DEBUG; then
+        if [[ $DEBUG -eq 1 ]]; then
             debug "$DIFF_CMD $diff_opts $(mixed_path $output_file) $(mixed_path $check_file)"
-        elif $VERBOSE; then
+        elif [[ $VERBOSE -eq 1 ]]; then
             echo "Compare output file with check file ${check_file/$ROOT_DIR\//}" 1>&2
         fi
         eval "$DIFF_CMD" $diff_opts "$(mixed_path $output_file)" "$(mixed_path $check_file)"
@@ -327,7 +330,7 @@ decompile() {
 
 ## output parameter: _EXTRA_CPATH
 extra_cpath() {
-    if [[ $SCALA_VERSION==3 ]]; then
+    if [[ $SCALA_VERSION -eq 3 ]]; then
         lib_path="$SCALA3_HOME/lib"
     else
         lib_path="$SCALA_HOME/lib"
@@ -373,7 +376,7 @@ doc() {
 
     local sources_file="$TARGET_DIR/scaladoc_sources.txt"
     [[ -f "$sources_file" ]] && rm -rf "$sources_file"
-    # for f in $(find $SOURCE_DIR/main/java/ -name *.java 2>/dev/null); do
+    # for f in $(find $SOURCE_JAVA_DIR/ -name *.java 2>/dev/null); do
     #     echo $(mixed_path $f) >> "$sources_file"
     # done
     for f in $(find "$CLASSES_DIR/" -type f -name "*.tasty" 2>/dev/null); do
@@ -385,9 +388,9 @@ doc() {
     else
         echo -siteroot "$(mixed_path $TARGET_DOCS_DIR)" -project "$PROJECT_NAME" -project-version "$PROJECT_VERSION" > "$opts_file"
     fi
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "$SCALADOC_CMD @$(mixed_path $opts_file) @$(mixed_path $sources_file)"
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "Generate HTML documentation into directory \"${TARGET_DOCS_DIR/$ROOT_DIR\//}\"" 1>&2
     fi
     eval "$SCALADOC_CMD" "@$(mixed_path $opts_file)" "@$(mixed_path $sources_file)"
@@ -395,9 +398,9 @@ doc() {
         error "Failed to generate HTML documentation into directory \"${TARGET_DOCS_DIR/$ROOT_DIR\//}\""
         cleanup 1
     fi
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "HTML documentation saved into directory \"$TARGET_DOCS_DIR\""
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "HTML documentation saved into directory \"${TARGET_DOCS_DIR/$ROOT_DIR\//}\"" 1>&2
     fi
     touch "$doc_timestamp_file"
@@ -414,9 +417,9 @@ run() {
 
     local scala_opts="-classpath \"$(mixed_path $CLASSES_DIR)\""
 
-    if $DEBUG; then
+    if [[ $DEBUG -eq 1 ]]; then
         debug "$SCALA_CMD $scala_opts $MAIN_CLASS $MAIN_ARGS"
-    elif $VERBOSE; then
+    elif [[ $VERBOSE -eq 1 ]]; then
         echo "Execute Scala main class \"$MAIN_CLASS\"" 1>&2
     fi
     eval "$SCALA_CMD" $scala_opts $MAIN_CLASS $MAIN_ARGS
@@ -424,7 +427,7 @@ run() {
         error "Failed to execute Scala main class \"$MAIN_CLASS\""
         cleanup 1
     fi
-    if $TASTY; then
+    if [[ $TASTY -eq 1 ]]; then
         echo "call :run_tasty"
         [[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
     fi
@@ -444,44 +447,48 @@ EXITCODE=0
 ROOT_DIR="$(getHome)"
 
 SOURCE_DIR="$ROOT_DIR/src"
-MAIN_SOURCE_DIR="$SOURCE_DIR/main/scala"
+SOURCE_JAVA_DIR="$SOURCE_DIR/main/java"
+SOURCE_SCALA_DIR="$SOURCE_DIR/main/scala"
 TARGET_DIR="$ROOT_DIR/target"
 TARGET_DOCS_DIR="$TARGET_DIR/docs"
 CLASSES_DIR="$TARGET_DIR/classes"
 
-CLEAN=false
-COMPILE=false
-DEBUG=false
-DECOMPILE=false
-DOC=false
-HELP=false
-LINT=false
+## We refrain from using `true` and `false` which are Bash commands
+## (see https://man7.org/linux/man-pages/man1/false.1.html)
+CLEAN=0
+COMPILE=0
+DEBUG=0
+DECOMPILE=0
+DOC=0
+HELP=0
+LINT=0
 MAIN_CLASS=rockthejvm.Main
 MAIN_ARGS=
-RUN=false
+RUN=0
 SCALA_VERSION=3
-SCALAC_OPTS_PRINT=false
-TASTY=false
-TEST=false
-TIMER=false
-VERBOSE=false
+SCALAC_OPTS_PRINT=0
+TASTY=0
+TEST=0
+TIMER=0
+USE_RC=0
+VERBOSE=0
 
 COLOR_START="[32m"
 COLOR_END="[0m"
 
-cygwin=false
-mingw=false
-msys=false
-darwin=false
+cygwin=0
+mingw=0
+msys=0
+darwin=0
 case "$(uname -s)" in
-    CYGWIN*) cygwin=true ;;
-    MINGW*)  mingw=true ;;
-    MSYS*)   msys=true ;;
-    Darwin*) darwin=true
+    CYGWIN*) cygwin=1 ;;
+    MINGW*)  mingw=1 ;;
+    MSYS*)   msys=1 ;;
+    Darwin*) darwin=1
 esac
 unset CYGPATH_CMD
 PSEP=":"
-if $cygwin || $mingw || $msys; then
+if [[ $(($cygwin + $mingw + $msys)) -gt 0 ]]; then
     CYGPATH_CMD="$(which cygpath 2>/dev/null)"
     PSEP=";"
     [[ -n "$CFR_HOME" ]] && CFR_HOME="$(mixed_path $CFR_HOME)"
@@ -516,7 +523,7 @@ unset CFR_CMD
 [[ -x "$CFR_HOME/bin/cfr" ]] && CFR_CMD="$CFR_HOME/bin/cfr"
 
 PROJECT_NAME="$(basename $ROOT_DIR)"
-PROJECT_URL="github.com/$USER/dotty-examples"
+PROJECT_URL="github.com/$USER/scala3-examples"
 PROJECT_VERSION="1.0-SNAPSHOT"
 
 args "$@"
@@ -529,27 +536,27 @@ SCALADOC_CMD=$SCALADOC3
 ##############################################################################
 ## Main
 
-$HELP && help && cleanup
+[[ $HELP -eq 1 ]] && help && cleanup
 
-if $CLEAN; then
+if [[ $CLEAN -eq 1 ]]; then
     clean || cleanup 1
 fi
-if $LINT; then
+if [[ $LINT -eq 1 ]]; then
     lint || cleanup 1
 fi
-if $COMPILE; then
+if [[ $COMPILE -eq 1 ]]; then
     compile || cleanup 1
 fi
-if $DECOMPILE; then
+if [[ $DECOMPILE -eq 1 ]]; then
     decompile || cleanup 1
 fi
-if $DOC; then
+if [[ $DOC -eq 1 ]]; then
     doc || cleanup 1
 fi
-if $RUN; then
+if [[ $RUN -eq 1 ]]; then
     run || cleanup 1
 fi
-if $TEST; then
+if [[ $TEST -eq 1 ]]; then
     run_tests || cleanup 1
 fi
 cleanup

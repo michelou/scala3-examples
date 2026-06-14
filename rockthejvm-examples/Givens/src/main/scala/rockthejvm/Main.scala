@@ -24,5 +24,5 @@ object scalaThree:
 
 @main def Main: Unit =
   scalaTwo.main
-  println
+  println()
   scalaThree.main

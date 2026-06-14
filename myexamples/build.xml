@@ -20,8 +20,12 @@
     <property name="apiguardian.version" value="1.1.2" />
     <property name="cfr.version" value="0.152" />
     <property name="hamcrest.version" value="2.2" />
-    <property name="junit-platform.version" value="1.12.1" />
+    <property name="junit-platform.version" value="1.14.4" />
     <property name="junit.version" value="4.13.2" />
+
+    <taskdef
+        resource="edu/umd/cs/findbugs/anttask/tasks.properties"
+        classpath="${env.ANT_HOME}/lib/spotbugs-ant.jar" />
 
     <target name="init.local" if="use.local">
         <property name="scala3.home" value="${env.SCALA3_HOME}" />

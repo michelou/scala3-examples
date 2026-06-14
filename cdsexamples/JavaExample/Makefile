@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2018-2025 Stéphane Micheloud
+## Copyright (c) 2018-2026 Stéphane Micheloud
 ##
 ## Licensed under the MIT License.
 ##
@@ -65,7 +65,7 @@ DOC_SOURCES    = $(shell $(FIND) "$(SOURCE_DIR)/main/java" -type f -name "*.java
 DOC_TARGET     = $(DOC_TARGET_DIR)/.latest-build
 
 PROJECT_NAME    ?= $(shell basename $(CURDIR))
-PROJECT_URL     ?= https://github.com/$(USERNAME)/dotty-examples
+PROJECT_URL     ?= https://github.com/$(USERNAME)/scala3-examples
 PROJECT_VERSION ?= 1.0.0
 
 DOC_OPTS_FILE    = $(TARGET_DIR)/javadoc_opts.txt

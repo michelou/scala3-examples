@@ -1,4 +1,4 @@
-val scala3Version = "3.3.7"
+val scala3Version = "3.3.8"
 val akkaHttpVersion = "10.7.2"
 val sparkVersion = "4.0.1"
 val twitter4jVersion = "4.1.2"

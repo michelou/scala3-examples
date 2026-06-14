@@ -59,6 +59,9 @@ if not defined _SCALAFMT_CMD (
 call :scala3
 if not %_EXITCODE%==0 goto end
 
+call :scala3_rc
+if not %_EXITCODE%==0 goto end
+
 call :sbt
 if not %_EXITCODE%==0 goto end
 
@@ -565,6 +568,40 @@ if defined __SCALAC_CMD (
 )
 if not exist "%_SCALA3_HOME%\bin\scalac.bat" (
     echo %_ERROR_LABEL% Scala 3 executable not found ^("%_SCALA3_HOME%"^) 1>&2
+    set _EXITCODE=1
+    goto :eof
+)
+goto :eof
+
+@rem output parameter: _SCALA3_RC_HOME
+:scala3_rc
+set _SCALA3_RC_HOME=
+
+set __SCALAC_CMD=
+for /f "delims=" %%f in ('where scalac.bat 2^>NUL') do (
+    set __VERSION=
+    for /f "tokens=1,2,3,4,*" %%i in ('scalac.bat -version 2^>^&1') do set "__VERSION=%%l"
+    if defined __VERSION if not "!__VERSION:RC=!"=="!__VERSION!" set "__SCALAC_CMD=%%f"
+)
+if defined __SCALAC_CMD (
+    for /f "delims=" %%i in ("%__SCALAC_CMD%") do set "__SCALA3_BIN_DIR=%%~dpi"
+    for /f "delims=" %%f in ("!__SCALA3_BIN_DIR!\.") do set "_SCALA3_RC_HOME=%%~dpf"
+) else if defined SCALA3_RC_HOME (
+    set "_SCALA3_RC_HOME=%SCALA3_RC_HOME%"
+    if %_DEBUG%==1 echo %_DEBUG_LABEL% Using environment variable SCALA3_RC_HOME 1>&2
+) else (
+    set __PATH=C:\opt
+    for /f "delims=" %%f in ('dir /ad /b "!__PATH!\scala3-3*RC*" 2^>NUL') do set "_SCALA3_RC_HOME=!__PATH!\%%f"
+    if not defined _SCALA3_RC_HOME (
+        set "__PATH=%ProgramFiles%"
+        for /f "delims=" %%f in ('dir /ad /b "!__PATH!\scala3-3*RC*" 2^>NUL') do set "_SCALA3_RC_HOME=!__PATH!\%%f"
+    )
+    if defined _SCALA3_RC_HOME (
+        if %_DEBUG%==1 echo %_DEBUG_LABEL% Using default Scala 3 RC installation directory "!_SCALA3_RC_HOME!" 1>&2
+    )
+)
+if not exist "%_SCALA3_RC_HOME%\bin\scalac.bat" (
+    echo %_ERROR_LABEL% Scala 3 RC executable not found ^("%_SCALA3_RC_HOME%"^) 1>&2
     set _EXITCODE=1
     goto :eof
 )
@@ -1319,6 +1356,7 @@ if %__VERBOSE%==1 (
     if defined SCALA_CLI_HOME echo    "SCALA_CLI_HOME=%SCALA_CLI_HOME%" 1>&2
     if defined SCALA_HOME echo    "SCALA_HOME=%SCALA_HOME%" 1>&2
     if defined SCALA3_HOME echo    "SCALA3_HOME=%SCALA3_HOME%" 1>&2
+    if defined SCALA3_HOME echo    "SCALA3_RC_HOME=%SCALA3_RC_HOME%" 1>&2
     if defined VSCODE_HOME echo    "VSCODE_HOME=%VSCODE_HOME%" 1>&2
     echo Path associations: 1>&2
     for /f "delims=" %%i in ('subst') do (
@@ -1359,6 +1397,7 @@ endlocal & (
         if not defined SCALA_HOME set "SCALA_HOME=%_SCALA_HOME%"
         if not defined SCALA_CLI_HOME set "SCALA_CLI_HOME=%_SCALA_CLI_HOME%"
         if not defined SCALA3_HOME set "SCALA3_HOME=%_SCALA3_HOME%"
+        if not defined SCALA3_RC_HOME set "SCALA3_RC_HOME=%_SCALA3_RC_HOME%"
         if not defined VSCODE_HOME set "VSCODE_HOME=%VSCODE_HOME%"
         @rem We prepend %_GIT_HOME%\bin to hide C:\Windows\System32\bash.exe
         set "PATH=%_GIT_HOME%\bin;%PATH%%_ANT_PATH%%_BAZEL_PATH%%_COURSIER_PATH%%_GRADLE_PATH%%_JMC_PATH%%_MAVEN_PATH%%_MILL_PATH%%_SBT_PATH%%_MSYS_PATH%;%_SCALA_CLI_HOME%%_BLOOP_PATH%%_GIT_PATH%%_VSCODE_PATH%;%~dp0bin"

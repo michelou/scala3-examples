@@ -48,7 +48,7 @@ Optionally one may also install the following software:
 - [sbt 2.0][sbt_downloads] (requires Java 8+) ([*release notes*][sbt_relnotes])
 - [Scala 2.13][scala_releases] (requires Java 8+) ([*release notes*][scala_relnotes], [*Scala API*][scala_api])
 - [Scala 2.13 DEV][scala_snapshots]
-- [Scala 3.7 Next][scala3_next_releases] <sup id="anchor_06">[6](#footnote_06)</sup> ([*release notes*][scala3_next_relnotes])
+- [Scala 3.9 LTS][scala3_rc_releases] <sup id="anchor_06">[6](#footnote_06)</sup> ([*release notes*][scala3_rc_relnotes])
 - [scala-cli 1.14][scala_cli_downloads] ([*release notes*][scala_cli_relnotes])
 - [Temurin OpenJDK 21 LTS][temurin_openjdk21] <sup id="anchor_02">[2](#footnote_02)</sup> ([*release notes*][temurin_openjdk21_relnotes], [*Java 21 API*][oracle_openjdk21_api])
 - [Visual Studio Code 1.123][vscode_downloads] ([*release notes*][vscode_relnotes])
@@ -270,6 +270,7 @@ We distinguish different sets of batch/bash commands:
     | [**`make.exe`**][gmake_cli] | [`Makefile`](examples/enum-Planet/Makefile) | [`Makefile.inc`](examples/Makefile.inc) | **`make`**`clean run` |
     | [**`mill.bat`**][mill_cli] | [`build.sc`](examples/enum-Planet/build.sc) | [`common.sc`](examples/common.sc) | **`mill -i app`** |
     | [**`mvn.cmd`**][apache_maven_cli] | [`pom.xml`](examples/enum-Planet/pom.xml) | [`pom.xml`](examples/pom.xml) | **`mvn`**`clean compile test` |
+    | [**`pwsh.exe`**][pwsh_cli] | [`build.ps1`](./examples/enum-Planet/build.ps1) | - | `pwsh -f build.ps1 clean run` |
     | [**`sbt.bat`**][sbt_cli] | [`build.sbt`](examples/enum-Planet/build.sbt) | n.a. | **`sbt`**`clean compile run` |
 
 2. Decompiler tools
@@ -336,7 +337,7 @@ We execute command [**`setenv.bat`**](setenv.bat) once to setup our development 
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a></b>
 Tool versions:
-   javac 17.0.19, scalac 2.13.18, scalac 3.3.8-RC2, scalafmt 3.7.17,
+   javac 17.0.19, scalac 2.13.18, scalac 3.3.8, scalafmt 3.7.17,
    ant 1.10.17, gradle 9.5.1, mvn 3.9.16, sbt 1.14.0, scala-cli 1.10.1,
    mill 1.0.6, bazel 8.5.0, cfr 0.152, make 4.4.1, python 3.11.1,
    jacoco 0.8.14, git 2.54.0, diff 3.12, bash 5.3.9(1)
@@ -354,7 +355,7 @@ Other development tools such as [**`javac.exe`**][javac_cli] and [**`scalac.bat`
 INFO: Could not find files for the given pattern(s).
 &nbsp;
 <b>&gt; <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/where_1" rel="external">where</a> /r %JAVA_HOME% javac</b>
-C:\opt\jdk-temurin-17.0.16_8\bin\javac.exe
+C:\opt\jdk-temurin-17.0.19_10\bin\javac.exe
 &nbsp;
 <b>&gt; %JAVA_HOME%\bin\<a href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/javac.html">javac</a> -version</b>
 javac 17.0.16
@@ -365,7 +366,7 @@ Command [**`setenv.bat -verbose`**](setenv.bat) also prints the tool paths and d
 <pre style="font-size:80%;">
 <b>&gt; <a href="setenv.bat">setenv</a> -verbose</b>
 Tool versions:
-   javac 17.0.19, scalac 2.13.18, scalac 3.3.8-RC2, scalafmt 3.7.12,
+   javac 17.0.19, scalac 2.13.18, scalac 3.3.8, scalafmt 3.7.12,
    ant 1.10.17, gradle 9.5.1, mvn 3.9.16, sbt 1.14.0, scala-cli 1.10.1,
    mill 1.0.6, bazel 8.5.0, cfr 0.152, make 3.81, python 3.11.1,
    jacoco 0.8.15, git 2.54.0, diff 3.12, bash 5.3.9(1)
@@ -586,17 +587,17 @@ Searching for class name System in archive files C:\opt\scala3-3.3.8\lib\*.jar
   jline-reader-3.19.0.jar:org/jline/reader/impl/completer/SystemCompleter.class
   scala-library-2.13.15.jar:scala/sys/SystemProperties$.class
   scala-library-2.13.15.jar:scala/sys/SystemProperties.class
-Searching for class name System in archive files C:\opt\scala-2.13.17\lib\*.jar
+Searching for class name System in archive files C:\opt\scala-2.13.18\lib\*.jar
   jline-3.19.0.jar:org/jline/builtins/SystemRegistryImpl$CommandOutputStream.class
   [...]
   scala-library.jar:scala/sys/SystemProperties$.class
   scala-library.jar:scala/sys/SystemProperties.class
-Searching for class name System in archive files C:\opt\jdk-temurin-17.0.16_8\lib\*.jar
+Searching for class name System in archive files C:\opt\jdk-temurin-17.0.19_10\lib\*.jar
   jrt-fs.jar:jdk/internal/jrtfs/JrtFileSystem$1.class
   [...]
   jrt-fs.jar:jdk/internal/jrtfs/SystemImage$2.class
   jrt-fs.jar:jdk/internal/jrtfs/SystemImage.class
-Searching for class name System in archive files c:\opt\javafx-sdk-17.0.16_8\lib\*.jar
+Searching for class name System in archive files c:\opt\javafx-sdk-17.0.19_10\lib\*.jar
   javafx.graphics.jar:com/sun/glass/ui/SystemClipboard.class
   [...]
   javafx.graphics.jar:com/sun/javafx/tk/TKSystemMenu.class
@@ -617,8 +618,8 @@ Searching for **`FileSystem`** with option **`-artifact`** produces the followin
 <pre style="font-size:80%;">
 <b>&gt; <a href="bin/searchjars.bat">searchjars</a> FileSystem -artifact</b>
 Searching for class name FileSystem in archive files C:\opt\scala3-3.3.8\lib\*.jar
-Searching for class name FileSystem in archive files C:\opt\scala-2.13.17\lib\*.jar
-Searching for class name FileSystem in archive files c:\opt\jdk-temurin-17.0.16_8\lib\*.jar
+Searching for class name FileSystem in archive files C:\opt\scala-2.13.18\lib\*.jar
+Searching for class name FileSystem in archive files c:\opt\jdk-temurin-17.0.19_10\lib\*.jar
   jrt-fs.jar:jdk/internal/jrtfs/JrtFileSystem$1.class
   jrt-fs.jar:jdk/internal/jrtfs/JrtFileSystem.class
   jrt-fs.jar:jdk/internal/jrtfs/JrtFileSystemProvider$1.class
@@ -748,7 +749,7 @@ C:\opt\scala3-3.3.8\bin\scala
 C:\opt\scala3-3.3.8\bin\scala.bat
 
 <b>&gt; <a href="bin/3.0/scala.bat">scala</a> -version</b>
-Scala code runner version 3.3.8-RC2 -- Copyright 2002-2026, LAMP/EPFL
+Scala code runner version 3.3.8 -- Copyright 2002-2026, LAMP/EPFL
 
 <b>&gt; <a href="bin/3.0/scala.bat">scala</a></b>
 Starting scala REPL...
@@ -766,7 +767,7 @@ The REPL has several commands available:
 val res0: String = C:\opt\jdk-temurin-17.0.19_10
 
 <b>scala&gt;</b> System.getenv().get("SCALA3_HOME")
-val res1: String = C:\opt\scala3-3.3.8-RC2
+val res1: String = C:\opt\scala3-3.3.8
 
 <b>scala&gt;</b> :load myexamples/HelloWorld/src/main/scala/HelloWorld.scala
 // defined object HelloWorld
@@ -1016,7 +1017,7 @@ In our case we downloaded the following installation files (<a href="#proj_deps"
 <a href="https://github.com/sbt/sbt/releases" rel="external">sbt-2.0.0-RC14.zip</a>                                 <i>( 17 MB)</i>
 <a href="https://www.scala-lang.org/files/archive/" rel="external">scala-2.13.18.zip</a>                                  <i>( 22 MB)</i>
 <a href="https://github.com/VirtusLab/scala-cli/releases" rel="external">scala-cli-x86_64-pc-win32.zip</a>                      <i>( 31 MB)</i>
-<a href="https://github.com/scala/scala3/releases/tag/3.3.7">scala3-3.3.8-RC2.zip</a>                               <i>( 34 MB)</i>
+<a href="https://github.com/scala/scala3/releases/tag/3.3.7">scala3-3.3.8.zip</a>                                   <i>( 34 MB)</i>
 <a href="https://github.com/scala/scala3/releases/tag/3.7.4">scala3-3.7.4.zip</a>                                   <i>(123 MB)</i>
 </pre>
 </dd></dl>
@@ -1133,12 +1134,13 @@ Command Prompt has been around for as long as we can remember, but starting with
 [microsoft_vscode]: https://code.visualstudio.com/
 [mill_changelog]: https://github.com/com-lihaoyi/mill/blob/main/changelog.adoc
 [mill_cli]: https://com-lihaoyi.github.io/mill/#command-line-tools
-[mill_releases]: https://github.com/lihaoyi/mill/releases/
+[mill_releases]: https://mill-build.org/mill/0.11.x/Java_Installation_IDE_Support.html#_other_installation_methods
 [msys2_changelog]: https://github.com/msys2/setup-msys2/blob/master/CHANGELOG.md
 [msys2_releases]: https://github.com/msys2/msys2-installer/releases
 [mysql_examples]: https://github.com/michelou/mysql-examples#top
 [nodejs_examples]: https://github.com/michelou/nodejs-examples#top
 [powershell_examples]: https://github.com/michelou/powershell-examples#top
+[pwsh_cli]: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh
 [oracle_openjdk17_api]: https://docs.oracle.com/en/java/javase/17/docs/api/
 [oracle_openjdk21]: https://jdk.java.net/21/
 [oracle_openjdk21_api]: https://docs.oracle.com/en/java/javase/21/docs/api/
@@ -1160,8 +1162,8 @@ Command Prompt has been around for as long as we can remember, but starting with
 [scala3_home]: https://dotty.epfl.ch
 [scala3_lts_releases]: https://github.com/scala/scala3/releases
 [scala3_lts_relnotes]: https://github.com/scala/scala3/releases/tag/3.3.8
-[scala3_next_releases]: https://github.com/scala/scala3/releases
-[scala3_next_relnotes]: https://github.com/scala/scala3/releases/tag/3.7.4-RC1
+[scala3_rc_releases]: https://github.com/scala/scala3/releases
+[scala3_rc_relnotes]: https://github.com/scala/scala3/releases/tag/3.9.0-RC1
 [scalac_cli]: https://docs.scala-lang.org/overviews/compiler-options/index.html
 [semanticdb_guide]: https://scalameta.org/docs/semanticdb/guide.html
 [sml_examples]: https://github.com/michelou/sml-examples#top

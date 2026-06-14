@@ -80,7 +80,7 @@ DOC_SOURCES    = $(shell $(FIND) "$(CLASSES_DIR)" -type f -name "*.tasty" 2>/dev
 DOC_TARGET     = $(DOC_TARGET_DIR)/.latest-build
 
 PROJECT_NAME    ?= $(shell basename $(CURDIR))
-PROJECT_URL     ?= https://github.com/$(USERNAME)/dotty-examples
+PROJECT_URL     ?= https://github.com/$(USERNAME)/scala3-examples
 PROJECT_VERSION ?= 1.0.0
 
 DOC_OPTS_FILE    = $(TARGET_DIR)/scaladoc_opts.txt

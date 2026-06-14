@@ -37,7 +37,7 @@ def lastComponentOf[T](thing: T): ConstituentPartOf[T] = thing match
   println(s"lastDigitOf=$i")
   println(s"lastCharOf =$c")
   println(s"lastElemOf =$e")
-  println
+  println()
 
   val lastDigit = lastComponentOf(BigInt(53728573)) // 3
   val lastChar = lastComponentOf("Scala") // 'a'

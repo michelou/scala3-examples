@@ -27,7 +27,7 @@ object PermissionsWithBits:
 
   println(s"bitString=$bitString")
   println(s"hexString=$hexString")
-  println
+  println()
 
   // standard API
   val first = Permissions.READ.ordinal

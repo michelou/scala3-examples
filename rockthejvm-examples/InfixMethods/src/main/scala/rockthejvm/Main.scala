@@ -29,5 +29,5 @@ object test2:
 
 @main def Main: Unit =
   test1.main
-  println
+  println()
   test2.main

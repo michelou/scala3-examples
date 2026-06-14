@@ -93,8 +93,11 @@ object Main {
   def varargPattern: Unit = {
     val xs = List(1, 2, 3, 4)
     xs match {
-      case List(1, 2, xs: _*) => println(xs) // binds xs
-      case List(1, _: _*) => // wildcard pattern
+      // The syntax `x: _*` is no longer supported for vararg splices; use `x*` instead
+      // This construct can be rewritten automatically under -rewrite -source 3.4-migration.
+      // case List(1, 2, xs: _*) => println(xs) // binds xs
+      case List(1, 2, xs*) => println(xs) // binds xs
+      case List(1, _*) => // wildcard pattern
       case ys => // for exhaustivity
     }
   }

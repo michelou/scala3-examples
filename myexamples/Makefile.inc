@@ -54,14 +54,14 @@ HAMCREST_ALL_VERSION = 1.3
 ## https://mvnrepository.com/artifact/junit/junit
 JUNIT_VERSION = 4.13.2
 ## https://mvnrepository.com/artifact/org.scala-lang/scala-library
-SCALA_VERSION = 2.13.17
+SCALA_VERSION = 2.13.18
 ## https://mvnrepository.com/artifact/org.scala-lang/scala3-library
-SCALA3_VERSION = 3.3.7
+SCALA3_VERSION = 3.3.8
 ## https://mvnrepository.com/artifact/org.scalatest/scalatest
-SCALATEST_VERSION = 3.2.19
+SCALATEST_VERSION = 3.2.20
 ## https://mvnrepository.com/artifact/org.specs2/specs2-core
 ## Note: Specs2 5.x depends on Scala 3 while Specs2 4.x depends on Scala 2 or Scala 3
-SPECS2_VERSION = 5.6.4
+SPECS2_VERSION = 5.9.0
 
 ## https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.17/scala-library-2.13.17.jar
 SCALA_LIB_JAR         = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala-library-$(SCALA_VERSION).jar" | tail -1)

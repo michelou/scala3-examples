@@ -8,7 +8,7 @@ java {
 
 project.ext {
     // sanetize properties from gradle.properties
-    scalaVersion = hasProperty("scalaVersion") ? scalaVersion : "3.3.7"
+    scalaVersion = hasProperty("scalaVersion") ? scalaVersion : "3.3.8"
     scalaLocalInstall = hasProperty("scalaLocalInstall") ? scalaLocalInstall.toBoolean() : false
     isScala3 = scalaVersion.startsWith("3")
     scalacMainClass = isScala3 ? "dotty.tools.dotc.Main": "scala.tools.nsc.Main"
@@ -18,8 +18,8 @@ project.ext {
     }
 
     scalaBinaryVersion = isScala3 ? "3" : "2.13"
-    scalatestVersion = "3.2.19"
-    specs2Version = "5.6.4"
+    scalatestVersion = "3.2.20"
+    specs2Version = "5.9.0"
     dependencies {
         if (isScala3) {
             implementation "org.scala-lang:scala3-compiler_3:$scalaVersion"
