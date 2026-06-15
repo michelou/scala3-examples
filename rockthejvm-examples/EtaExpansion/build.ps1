@@ -85,8 +85,8 @@ foreach ($ARG in $args) {
         }
     } else {
         ## subcommand
-        if ($ARG -ieq "clean") { $COMMANDS += 'Clean'
-        } elseif ($ARG -ieq "compile") { $COMMANDS += 'Compile'
+        if ($ARG -ieq 'clean') { $COMMANDS += 'Clean'
+        } elseif ($ARG -ieq 'compile') { $COMMANDS += 'Compile'
         } elseif ($ARG -ieq "decompile") { $COMMANDS += 'Decompile'
         } elseif ($ARG -ieq "doc" ) { $COMMANDS += 'Compile', 'Doc'
         } elseif ($ARG -ieq "help") { $COMMANDS = 'Print-Help'
@@ -107,7 +107,7 @@ $MAIN_CLASS = "rockthejvm.$MAIN_NAME"
 $MAIN_ARGS = $null
 
 Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION PS_VERSION=$PS_VERSION"
-Write-Debug "Options    : DEBUG=$DEBUG TIMER=$TIMER VERBOSE=$VERBOSE"
+Write-Debug "Options    : DEBUG=$DEBUG TIMER=$TIMER USE_RC=$USE_RC VERBOSE=$VERBOSE"
 Write-Debug "Subcommands: $COMMANDS"
 if ($Env:CFR_HOME) { Write-Debug "Variables  : ""CFR_HOME=$Env:CFR_HOME""" }
 Write-Debug "Variables  : ""GIT_HOME=$Env:GIT_HOME"""
@@ -141,6 +141,7 @@ function Print-Help
     Write-Output ""
     Write-Output "   Options:"
     Write-Output "     -debug      print commands executed by this script"
+    Write-Output "     -rc         use Scala 3 release candidate if available"
     Write-Output "     -timer      print total execution time"
     Write-Output "     -verbose    print progress messages"
     Write-Output ""
@@ -226,8 +227,8 @@ function Compile-Java
     $CPATH = $CLASSES_DIR
     Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
 
-    $FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
-    $N = $FILES.Count
+    $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
+    $N = $SOURCE_FILES.Count
     if ($N -eq 0) {
         Write-Warning "No Java source file found"
         return
@@ -235,7 +236,7 @@ function Compile-Java
     } else { $N_FILES = "$N Java source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_sources.txt'
-    Write-Output $FILES > $SOURCES_FILE
+    [System.IO.File]::WriteAllLines($SOURCES_FILE, $SOURCE_FILES)
 
     Write-Debug """$JAVAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
     Write-Verbose "Compile $N_FILES to directory ""$($CLASSES_DIR.Replace($ROOT_DIR + $SEP, ''))"""
@@ -255,8 +256,8 @@ function Compile-Scala
     #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
     [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
 
-    $FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
-    $N = $FILES.Count
+    $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
+    $N = $SOURCE_FILES.Count
     if ($N -eq 0) {
         Write-Warning "No Scala source file found"
         return
@@ -264,8 +265,7 @@ function Compile-Scala
     } else { $N_FILES = "$N Scala source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_sources.txt'
-    #Write-Output $FILES > $SOURCES_FILE
-    [System.IO.File]::WriteAllLines($SOURCES_FILE, $FILES)
+    [System.IO.File]::WriteAllLines($SOURCES_FILE, $SOURCE_FILES)
 
     Write-Debug """$SCALAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
     Write-Verbose "Compile $N_FILES to directory ""$($CLASSES_DIR.Replace($ROOT_DIR + $SEP, ''))"""
@@ -284,7 +284,7 @@ function Build-Classpath
     $REPO_DIR = [IO.Path]::Combine($Env:USERPROFILE, '.m2', 'repository')
     if (! (Test-Path -PathType Container -PATH $REPO_DIR)) {
         Write-Error "Maven local repository not found"
-        set $EXITCODE = 1
+        $EXITCODE = 1
         return $CPATH
     }
     ## https://mvnrepository.com/artifact/org.scala-lang/scala-library

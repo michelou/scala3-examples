@@ -46,9 +46,15 @@ if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
     Cleanup 1
 }
 $SCALA_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
+if (! (Test-Path -PathType Leaf -Path $SCALA_CMD)) {
+    $SCALA_CMD = $null
+}
 $SCALADOC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scaladoc.bat'
+if (! (Test-Path -PathType Leaf -Path $SCALADOC_CMD)) {
+    $SCALADOC_CMD = $null
+}
 
-$PS_VERSION = $PSVersionTable.PSVersion.ToString() 
+$PS_VERSION = $PSVersionTable.PSVersion.ToString()
 $PROJECT_NAME = $BASENAME
 $PROJECT_VERSION = '1.0-SNAPSHOT'
 
@@ -67,11 +73,11 @@ $USE_RC = $false  ## release candidate
 $VERBOSE = $false
 $N = 0
 foreach ($ARG in $args) {
-    if ($ARG.StartsWith('-')) {
+    if ($ARG.StartsWith("-")) {
         ## option
-        if ($ARG -ieq '-debug') { $DEBUG = $true; $DebugPreference='Continue'
+        if ($ARG -ieq "-debug") { $DEBUG = $true; $DebugPreference='Continue'
         } elseif ($ARG -ieq "-help"   ) { $COMMANDS = 'Print-Help'
-        } elseif ($ARG -ieq "-rc"     ) { $USE_RC = $true
+        } elseif ($ARG -ieq "-rc"  ) { $USE_RC = $true
         } elseif ($ARG -ieq "-timer"  ) { $TIMER = $true
         } elseif ($ARG -ieq "-verbose") { $VERBOSE = $true; $VerbosePreference = 'Continue'
         } else {
@@ -81,7 +87,7 @@ foreach ($ARG in $args) {
         }
     } else {
         ## subcommand
-        if ($ARG -ieq 'clean') { $COMMANDS += 'Clean'
+        if ($ARG -ieq "clean") { $COMMANDS += 'Clean'
         } elseif ($ARG -ieq "compile") { $COMMANDS += 'Compile'
         } elseif ($ARG -ieq "decompile") { $COMMANDS += 'Decompile'
         } elseif ($ARG -ieq "doc" ) { $COMMANDS += 'Compile', 'Doc'
@@ -98,7 +104,7 @@ foreach ($ARG in $args) {
     }
 }
 ## Source name and class name may differ
-$MAIN_NAME = 'Main'
+$MAIN_NAME = 'Sudoku'
 $MAIN_CLASS = $MAIN_NAME
 $MAIN_ARGS = $null
 
@@ -221,10 +227,10 @@ function Compile-Java
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
-    [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
+    Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
 
-    $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
-    $N = $SOURCE_FILES.Count
+    $FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
+    $N = $FILES.Count
     if ($N -eq 0) {
         Write-Warning "No Java source file found"
         return
@@ -232,7 +238,7 @@ function Compile-Java
     } else { $N_FILES = "$N Java source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_sources.txt'
-    [System.IO.File]::WriteAllLines($SOURCES_FILE, $SOURCE_FILES)
+    Write-Output $FILES > $SOURCES_FILE
 
     Write-Debug """$JAVAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
     Write-Verbose "Compile $N_FILES to directory ""$($CLASSES_DIR.Replace($ROOT_DIR + $SEP, ''))"""
@@ -249,10 +255,11 @@ function Compile-Scala
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
+    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
     [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
 
-    $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
-    $N = $SOURCE_FILES.Count
+    $FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
+    $N = $FILES.Count
     if ($N -eq 0) {
         Write-Warning "No Scala source file found"
         return
@@ -260,7 +267,8 @@ function Compile-Scala
     } else { $N_FILES = "$N Scala source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_sources.txt'
-    [System.IO.File]::WriteAllLines($SOURCES_FILE, $SOURCE_FILES)
+    #Write-Output $FILES > $SOURCES_FILE
+    [System.IO.File]::WriteAllLines($SOURCES_FILE, $FILES)
 
     Write-Debug """$SCALAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
     Write-Verbose "Compile $N_FILES to directory ""$($CLASSES_DIR.Replace($ROOT_DIR + $SEP, ''))"""

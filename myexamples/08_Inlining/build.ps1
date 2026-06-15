@@ -40,6 +40,8 @@ if (! (Test-Path -PathType Leaf -Path $JAVAC_CMD)) {
     Write-Error "Java compiler not found (check variable ""JAVA_HOME"")"
     Cleanup 1
 }
+$JAVA_CMD = $Env:JAVA_HOME + $SEP + 'bin' + $SEP + 'java' + $EXE
+
 $SCALAC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scalac.bat'
 if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
     Write-Error "Scala 3 compiler not found (check variable ""SCALA3_HOME"")"
@@ -48,7 +50,7 @@ if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
 $SCALA_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
 $SCALADOC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scaladoc.bat'
 
-$PS_VERSION = $PSVersionTable.PSVersion.ToString() 
+$PS_VERSION = $PSVersionTable.PSVersion.ToString()
 $PROJECT_NAME = $BASENAME
 $PROJECT_VERSION = '1.0-SNAPSHOT'
 
@@ -67,9 +69,9 @@ $USE_RC = $false  ## release candidate
 $VERBOSE = $false
 $N = 0
 foreach ($ARG in $args) {
-    if ($ARG.StartsWith('-')) {
+    if ($ARG.StartsWith("-")) {
         ## option
-        if ($ARG -ieq '-debug') { $DEBUG = $true; $DebugPreference='Continue'
+        if ($ARG -ieq "-debug") { $DEBUG = $true; $DebugPreference='Continue'
         } elseif ($ARG -ieq "-help"   ) { $COMMANDS = 'Print-Help'
         } elseif ($ARG -ieq "-rc"     ) { $USE_RC = $true
         } elseif ($ARG -ieq "-timer"  ) { $TIMER = $true
@@ -81,7 +83,7 @@ foreach ($ARG in $args) {
         }
     } else {
         ## subcommand
-        if ($ARG -ieq 'clean') { $COMMANDS += 'Clean'
+        if ($ARG -ieq "clean") { $COMMANDS += 'Clean'
         } elseif ($ARG -ieq "compile") { $COMMANDS += 'Compile'
         } elseif ($ARG -ieq "decompile") { $COMMANDS += 'Decompile'
         } elseif ($ARG -ieq "doc" ) { $COMMANDS += 'Compile', 'Doc'
@@ -99,10 +101,26 @@ foreach ($ARG in $args) {
 }
 ## Source name and class name may differ
 $MAIN_NAME = 'Main'
-$MAIN_CLASS = $MAIN_NAME
+$MAIN_CLASS = 'myexamples.' + $MAIN_NAME
 $MAIN_ARGS = $null
 
-Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION PS_VERSION=$PS_VERSION"
+if ($USE_RC) {
+    $SCALAC_RC_CMD = $Env:SCALA3_RC_HOME + $SEP + 'bin' + $SEP + 'scalac.bat'
+    if (Test-Path -PathType Leaf -Path $SCALAC_RC_CMD) {
+        $SCALAC_CMD = $SCALAC_RC_CMD
+        $SCALA_CMD = $Env:SCALA3_RC_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
+        $SCALADOC_CMD = $Env:SCALA3_RC_HOME + $SEP + 'bin' + $SEP + 'scaladoc.bat'
+    } else {
+        Write-Warning "Scala 3 RC compiler not found (use default version)"
+        $USE_RC = $false
+    }
+}
+$IS_SCALA_CLI = $(&$SCALA_CMD -version 2>&1 | Select-String 'LAMP').Count -eq 0
+if ($IS_SCALA_CLI) {
+    $COMMANDS = $COMMANDS | ForEach-Object { $_.Replace('Run', 'Run-Java') }
+}
+Write-Debug "Properties : IS_SCALA_CLI=$IS_SCALA_CLI PS_VERSION=$PS_VERSION"
+Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION"
 Write-Debug "Options    : DEBUG=$DEBUG TIMER=$TIMER USE_RC=$USE_RC VERBOSE=$VERBOSE"
 Write-Debug "Subcommands: $COMMANDS"
 if ($Env:CFR_HOME) { Write-Debug "Variables  : ""CFR_HOME=$Env:CFR_HOME""" }
@@ -137,7 +155,7 @@ function Print-Help
     Write-Output ""
     Write-Output "   Options:"
     Write-Output "     -debug      print commands executed by this script"
-    Write-Output "     -rc         use Scala 3 release candidate if available"
+    Write-Output "     -rc         use Scala 3 release candidate version if available"
     Write-Output "     -timer      print total execution time"
     Write-Output "     -verbose    print progress messages"
     Write-Output ""
@@ -221,6 +239,7 @@ function Compile-Java
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
+    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
     [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
 
     $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
@@ -232,6 +251,7 @@ function Compile-Java
     } else { $N_FILES = "$N Java source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_sources.txt'
+    #Write-Output $SOURCE_FILES > $SOURCES_FILE
     [System.IO.File]::WriteAllLines($SOURCES_FILE, $SOURCE_FILES)
 
     Write-Debug """$JAVAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
@@ -249,6 +269,7 @@ function Compile-Scala
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
+    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
     [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
 
     $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
@@ -260,6 +281,7 @@ function Compile-Scala
     } else { $N_FILES = "$N Scala source files"
     }
     $SOURCES_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_sources.txt'
+    #Write-Output $SOURCE_FILES > $SOURCES_FILE
     [System.IO.File]::WriteAllLines($SOURCES_FILE, $SOURCE_FILES)
 
     Write-Debug """$SCALAC_CMD"" ""@$OPTS_FILE"" ""@$SOURCES_FILE"""
@@ -332,11 +354,11 @@ function Run
     }
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
-    $SCALA_OPTS = "-classpath ""$CPATH"""
-
+    $SCALA_OPTS = @('-classpath', $CPATH)
+        
     Write-Debug """$SCALA_CMD"" $SCALA_OPTS $MAIN_CLASS $MAIN_ARGS"
     Write-Verbose "Execute Scala main class ""$MAIN_CLASS"""
-    &"$SCALA_CMD" -classpath "$CPATH" $MAIN_CLASS $MAIN_ARGS
+    &"$SCALA_CMD" $SCALA_OPTS $MAIN_CLASS $MAIN_ARGS
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to execute Scala main class ""$MAIN_CLASS"""
         Cleanup 1
@@ -344,6 +366,24 @@ function Run
     if ($TASTY) {
         Write-Output "call :run_tasty"
         #[[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
+    }
+}
+
+function Run-Java
+{
+    $MAVEN2_DIR = $(Split-Path -Parent $SCALAC_CMD | Split-Path) + $SEP + 'maven2'
+    $JAR_FILES = (Get-ChildItem -Path $MAVEN2_DIR -Include "*.jar" -Recurse).FullName
+    $CPATH = $($JAR_FILES | Join-String -Separator $PATH_SEP) + $PATH_SEP + $CLASSES_DIR
+
+    $JAVA_OPTS_FILE = $TARGET_DIR + $SEP + 'java_opts.txt'
+    [System.IO.File]::WriteAllLines($JAVA_OPTS_FILE, '-classpath ' + $CPATH)
+
+    Write-Debug """$JAVA_CMD"" ""@$JAVA_OPTS_FILE"" $MAIN_CLASS $MAIN_ARGS"
+    Write-Verbose "Execute Scala main class ""$MAIN_CLASS"""
+    &"$JAVA_CMD" "@$JAVA_OPTS_FILE" $MAIN_CLASS $MAIN_ARGS
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to execute Scala main class ""$MAIN_CLASS"""
+        Cleanup 1
     }
 }
 

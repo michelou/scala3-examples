@@ -48,7 +48,7 @@ if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
 $SCALA_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
 $SCALADOC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scaladoc.bat'
 
-$PS_VERSION = $PSVersionTable.PSVersion.ToString() 
+$PS_VERSION = $PSVersionTable.PSVersion.ToString()
 $PROJECT_NAME = $BASENAME
 $PROJECT_VERSION = '1.0-SNAPSHOT'
 
@@ -69,7 +69,7 @@ $N = 0
 foreach ($ARG in $args) {
     if ($ARG.StartsWith('-')) {
         ## option
-        if ($ARG -ieq '-debug') { $DEBUG = $true; $DebugPreference='Continue'
+        if ($ARG -ieq "-debug") { $DEBUG = $true; $DebugPreference='Continue'
         } elseif ($ARG -ieq "-help"   ) { $COMMANDS = 'Print-Help'
         } elseif ($ARG -ieq "-rc"     ) { $USE_RC = $true
         } elseif ($ARG -ieq "-timer"  ) { $TIMER = $true
@@ -81,7 +81,7 @@ foreach ($ARG in $args) {
         }
     } else {
         ## subcommand
-        if ($ARG -ieq 'clean') { $COMMANDS += 'Clean'
+        if ($ARG -ieq "clean") { $COMMANDS += 'Clean'
         } elseif ($ARG -ieq "compile") { $COMMANDS += 'Compile'
         } elseif ($ARG -ieq "decompile") { $COMMANDS += 'Decompile'
         } elseif ($ARG -ieq "doc" ) { $COMMANDS += 'Compile', 'Doc'
@@ -99,7 +99,7 @@ foreach ($ARG in $args) {
 }
 ## Source name and class name may differ
 $MAIN_NAME = 'Main'
-$MAIN_CLASS = $MAIN_NAME
+$MAIN_CLASS = "rockthejvm.$MAIN_NAME"
 $MAIN_ARGS = $null
 
 Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION PS_VERSION=$PS_VERSION"
@@ -221,7 +221,7 @@ function Compile-Java
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
-    [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
+    Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
 
     $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
     $N = $SOURCE_FILES.Count
@@ -249,6 +249,7 @@ function Compile-Scala
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
+    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
     [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
 
     $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName

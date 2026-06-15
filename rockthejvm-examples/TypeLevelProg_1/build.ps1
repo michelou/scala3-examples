@@ -46,9 +46,15 @@ if (! (Test-Path -PathType Leaf -Path $SCALAC_CMD)) {
     Cleanup 1
 }
 $SCALA_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scala.bat'
+if (! (Test-Path -PathType Leaf -Path $SCALA_CMD)) {
+    $SCALA_CMD = $null
+}
 $SCALADOC_CMD = $Env:SCALA3_HOME + $SEP + 'bin' + $SEP + 'scaladoc.bat'
+if (! (Test-Path -PathType Leaf -Path $SCALADOC_CMD)) {
+    $SCALADOC_CMD = $null
+}
 
-$PS_VERSION = $PSVersionTable.PSVersion.ToString() 
+$PS_VERSION = $PSVersionTable.PSVersion.ToString()
 $PROJECT_NAME = $BASENAME
 $PROJECT_VERSION = '1.0-SNAPSHOT'
 
@@ -70,10 +76,10 @@ foreach ($ARG in $args) {
     if ($ARG.StartsWith('-')) {
         ## option
         if ($ARG -ieq '-debug') { $DEBUG = $true; $DebugPreference='Continue'
-        } elseif ($ARG -ieq "-help"   ) { $COMMANDS = 'Print-Help'
-        } elseif ($ARG -ieq "-rc"     ) { $USE_RC = $true
-        } elseif ($ARG -ieq "-timer"  ) { $TIMER = $true
-        } elseif ($ARG -ieq "-verbose") { $VERBOSE = $true; $VerbosePreference = 'Continue'
+        } elseif ($ARG -ieq '-help'   ) { $COMMANDS = 'Print-Help'
+        } elseif ($ARG -ieq '-rc'     ) { $USE_RC = $true
+        } elseif ($ARG -ieq '-timer'  ) { $TIMER = $true
+        } elseif ($ARG -ieq '-verbose') { $VERBOSE = $true; $VerbosePreference = 'Continue'
         } else {
             Write-Error "Unknown option ""$ARG"""
             $EXITCODE = 1
@@ -82,7 +88,7 @@ foreach ($ARG in $args) {
     } else {
         ## subcommand
         if ($ARG -ieq 'clean') { $COMMANDS += 'Clean'
-        } elseif ($ARG -ieq "compile") { $COMMANDS += 'Compile'
+        } elseif ($ARG -ieq 'compile') { $COMMANDS += 'Compile'
         } elseif ($ARG -ieq "decompile") { $COMMANDS += 'Decompile'
         } elseif ($ARG -ieq "doc" ) { $COMMANDS += 'Compile', 'Doc'
         } elseif ($ARG -ieq "help") { $COMMANDS = 'Print-Help'
@@ -99,7 +105,7 @@ foreach ($ARG in $args) {
 }
 ## Source name and class name may differ
 $MAIN_NAME = 'Main'
-$MAIN_CLASS = $MAIN_NAME
+$MAIN_CLASS = "rockthejvm.$MAIN_NAME"
 $MAIN_ARGS = $null
 
 Write-Debug "Properties : PROJECT_NAME=$PROJECT_NAME PROJECT_VERSION=$PROJECT_VERSION PS_VERSION=$PS_VERSION"
@@ -221,7 +227,7 @@ function Compile-Java
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'javac_opts.txt'
     #$CPATH = $(Build-Classpath) + $CLASSES_DIR
     $CPATH = $CLASSES_DIR
-    [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
+    Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
 
     $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_JAVA_DIR -Include "*.java" -Recurse).FullName
     $N = $SOURCE_FILES.Count
@@ -247,8 +253,8 @@ function Compile-Java
 function Compile-Scala
 {
     $OPTS_FILE = Join-Path -Path $TARGET_DIR -ChildPath 'scalac_opts.txt'
-    #$CPATH = $(Build-Classpath) + $CLASSES_DIR
-    $CPATH = $CLASSES_DIR
+    $CPATH = $(Build-Classpath) + $CLASSES_DIR
+    #Write-Output "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""" > $OPTS_FILE
     [System.IO.File]::WriteAllLines($OPTS_FILE, "-classpath ""$($CPATH.Replace('\', '\\'))"" -d ""$($CLASSES_DIR.Replace('\', '\\'))""")
 
     $SOURCE_FILES = (Get-ChildItem -Path $SOURCE_SCALA_DIR -Include "*.scala" -Recurse).FullName
@@ -271,7 +277,7 @@ function Compile-Scala
         return
     }
 }
-<#
+
 function Build-Classpath
 {
     $CPATH = $null
@@ -279,16 +285,16 @@ function Build-Classpath
     $REPO_DIR = [IO.Path]::Combine($Env:USERPROFILE, '.m2', 'repository')
     if (! (Test-Path -PathType Container -PATH $REPO_DIR)) {
         Write-Error "Maven local repository not found"
-        set $EXITCODE = 1
+        $EXITCODE = 1
         return $CPATH
     }
-    ## https://mvnrepository.com/artifact/org.scala-lang/scala-library
-    $JAR_FILE = (Get-ChildItem -Path ($REPO_DIR + $SEP + 'org' + $SEP + 'scala-lang') -Include 'scala-library-2.13.*.jar' -Recurse)
+    ## https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
+    $JAR_FILE = (Get-ChildItem -Path ($REPO_DIR + $SEP + 'org' + $SEP + 'scala-lang') -Include 'scala-reflect-2.13*.jar' -Recurse)
     if ($JAR_FILE.Count -gt 0) { $CPATH = $CPATH + $($JAR_FILE | Select-Object -Last 1).FullName + $PATH_SEP }
 
     return $CPATH 
 }
-#>
+
 function Decompile
 {
 }

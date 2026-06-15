@@ -42,6 +42,8 @@ endif
 
 ## https://mvnrepository.com/artifact/org.scala-lang/scala-library
 SCALA_VERSION = 2.13.18
+## https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
+SCALA_REFLECT_VERSION = 2.13.18
 ## https://mvnrepository.com/artifact/org.scala-lang/scala3-library
 SCALA3_VERSION = 3.3.8
 ## https://mvnrepository.com/artifact/org.scalatest/scalatest
@@ -51,6 +53,7 @@ SCALATEST_VERSION = 3.2.20
 SPECS2_VERSION = 5.9.0
 
 SCALA_LIB_JAR      = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala-library-2.13.*.jar" | tail -1)
+SCALA_REFLECT_JAR  = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala-reflect-$(SCALA_REFLECT_VERSION).jar")
 SCALA3_LIB_JAR     = $(shell $(FIND) "$(LOCAL_REPO)/org/scala-lang" -name "scala3-library_3-3.3.*.jar" | tail -1)
 HAMCREST_JAR       = $(shell $(FIND) "$(LOCAL_REPO)/org/hamcrest" -name "hamcrest-2.2.jar")
 JUNIT_JAR          = $(shell $(FIND) "$(LOCAL_REPO)/junit/junit" -name "junit-4.13.2.jar")

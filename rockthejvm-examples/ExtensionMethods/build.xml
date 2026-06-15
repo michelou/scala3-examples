@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ExtensionMethods" default="compile" basedir=".">
 
-    <property name="scala-source.dir" value="${basedir}/src/main/scala" />
+    <property name="source.dir" value="${basedir}/src" />
+    <property name="scala-source.dir" value="${source.dir}/main/scala" />
     <property name="target.dir" value="${basedir}/target" />
     <property name="target-docs.dir" value="${target.dir}/docs" />
     <property name="build.dir" value="${target.dir}/main/classes" />
@@ -36,6 +37,27 @@
                 <path refid="build.classpath" />
             </classpath>
         </java>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${target.dir}/${ant.project.name}.jar"
+             basedir="${build.dir}">
+             <manifest>
+                 <attribute name="Main-Class" value="${main.class}"/>
+             </manifest>
+        </jar>
+    </target>
+
+    <target name="spotbugs" depends="jar">
+        <spotbugs home="${env.SPOTBUGS_HOME}"
+                  sourcepath="${source.dir}"
+                  outputFile="${target.dir}/${ant.project.name}-sb.xml">
+            <auxClasspath>
+                <fileset dir="${env.SCALA3_HOME}/lib" includes="scala-library*.jar" />
+                <fileset dir="${env.SCALA3_HOME}/lib" includes="scala3-library*.jar" />
+            </auxClasspath>
+            <class location="${target.dir}/${ant.project.name}.jar" />
+        </spotbugs>
     </target>
 
     <target name="test-compile" depends="init, compile">

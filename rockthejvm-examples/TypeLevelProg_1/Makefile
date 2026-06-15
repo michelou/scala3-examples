@@ -11,7 +11,7 @@ SOURCE_DIR  = src
 TARGET_DIR  = target
 CLASSES_DIR = $(TARGET_DIR)/classes
 
-SCALAC_FLAGS = -deprecation -feature
+SCALAC_FLAGS = -deprecation -feature -classpath "$(SCALA_REFLECT_JAR)"
 SCALA_FLAGS  = -classpath "$(CLASSES_DIR)"
 
 ##############################################################################

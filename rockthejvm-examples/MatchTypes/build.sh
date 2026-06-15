@@ -54,6 +54,7 @@ args() {
         ## options
         -debug)    DEBUG=1 ;;
         -help)     HELP=1 ;;
+        -rc)       USE_RC=1 ;;
         -timer)    TIMER=1 ;;
         -verbose)  VERBOSE=1 ;;
         -*)
@@ -87,7 +88,7 @@ args() {
             LINT=0
         fi
     fi
-    debug "Options    : TIMER=$TIMER VERBOSE=$VERBOSE"
+    debug "Options    : TIMER=$TIMER USE_RC=$USE_RC VERBOSE=$VERBOSE"
     debug "Subcommands: CLEAN=$CLEAN COMPILE=$COMPILE DECOMPILE=$DECOMPILE HELP=$HELP LINT=$LINT RUN=$RUN"
     [[ -n "$CFR_HOME" ]] && debug "Variables  : CFR_HOME=$CFR_HOME"
     debug "Variables  : JAVA_HOME=$JAVA_HOME"
@@ -104,6 +105,7 @@ Usage: $BASENAME { <option> | <subcommand> }
 
   Options:
     -debug       print commands executed by this script
+    -rc          use Scala 3 release candidate if available
     -timer       print total execution time
     -verbose     print progress messages
 
@@ -481,6 +483,7 @@ SCALAC_OPTS_PRINT=0
 TASTY=0
 TEST=0
 TIMER=0
+USE_RC=0
 VERBOSE=0
 
 COLOR_START="[32m"
@@ -490,11 +493,13 @@ cygwin=0
 mingw=0
 msys=0
 darwin=0
+linux=0
 case "$(uname -s)" in
     CYGWIN*) cygwin=1 ;;
     MINGW*)  mingw=1 ;;
     MSYS*)   msys=1 ;;
-    Darwin*) darwin=1
+    Darwin*) darwin=1 ;;
+    Linux*)  linux=1
 esac
 unset CYGPATH_CMD
 PSEP=":"
