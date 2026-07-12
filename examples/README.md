@@ -3,10 +3,10 @@
 <table style="font-family:Helvetica,Arial;line-height:1.6;">
   <tr>
   <td style="border:0;padding:0 10px 0 0;min-width:120px;">
-    <a href="https://dotty.epfl.ch/" rel="external"><img style="border:0;width:120px;" src="../docs/images/dotty.png" alt="Dotty project" /></a>
+    <a href="https://scala-lang.org/" rel="external"><img style="border:0;width:120px;" src="../docs/images/dotty.png" alt="Dotty project" /></a>
   </td>
   <td style="border:0;padding:0;vertical-align:text-top;">
-    Directory <strong><code>examples\</code></strong> contains <a href="https://dotty.epfl.ch/" rel="external">Scala 3</a> code examples coming from various websites - mostly from the <a href="https://dotty.epfl.ch/" rel="external">Dotty project</a>.
+    Directory <strong><code>examples\</code></strong> contains <a href="https://scala-lang.org/" rel="external">Scala 3</a> code examples coming from various websites - mostly from the <a href="https://scala-lang.org/" rel="external">Dotty project</a>.
   </td>
   </tr>
 </table>
@@ -48,7 +48,7 @@ The Ant build file [**`enum-Planet\build.xml`**](enum-Planet/build.xml) depends 
 Execution of [**`Planet.scala`**](enum-Planet/src/main/scala/Planet.scala) produces the following output ([Ivy][apache_ant_ivy] support is enabled by default):
 
 <pre style="font-size:80%;">
-<b>&gt; <a href="https://ant.apache.org/manual/running.html">ant</a> clean run</b>
+<b>&gt; <a href="https://ant.apache.org/manual/running.html" rel="external">ant</a> clean run</b>
 Buildfile: Y:\examples\enum-Planet\build.xml
 
 <span style="font-weight:bold;color:#9966ff;">clean:</span>
@@ -721,7 +721,7 @@ public final class main {
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/June 2026* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/July 2026* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->

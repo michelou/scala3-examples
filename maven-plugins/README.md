@@ -231,7 +231,7 @@ We give here the <code>&lt;plugin></code> section of a POM file.
 
 ***
 
-*[mics](https://lampwww.epfl.ch/~michelou/)/June 2026* [**&#9650;**](#top)
+*[mics](https://lampwww.epfl.ch/~michelou/)/July 2026* [**&#9650;**](#top)
 <span id="bottom">&nbsp;</span>
 
 <!-- link refs -->

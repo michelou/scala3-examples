@@ -54,54 +54,63 @@ args() {
         ## options
         -debug)    DEBUG=1 ;;
         -help)     HELP=1 ;;
+        -rc)       USE_RC=1 ;;
+        -scala2)   SCALA_VERSION=2 ;;
+        -scala3)   SCALA_VERSION=3 ;;
         -timer)    TIMER=1 ;;
         -verbose)  VERBOSE=1 ;;
         -*)
-            error "Unknown option $arg"
+            error "Unknown option \"$arg\""
             EXITCODE=1 && return 0
             ;;
         ## subcommands
-        clean)     CLEAN=1 ;;
-        compile)   COMPILE=1 ;;
-        decompile) COMPILE=1 && DECOMPILE=1 ;;
-        doc)       COMPILE=1 && DOC=1 ;;
+        clean)     COMMANDS+=' clean' ;;
+        compile)   COMMANDS+=' compile' ;;
+        decompile) COMMANDS+=' compile decompile' ;;
+        doc)       COMMANDS+=' compile doc' ;;
         help)      HELP=1 ;;
-        lint)      LINT=1 ;;
-        run)       COMPILE=1 && RUN=1 ;;
+        lint)      COMMANDS+=' lint' ;;
+        run)       COMMANDS+=' compile run' ;;
         *)
-            error "Unknown subcommand $arg"
+            error "Unknown subcommand \"$arg\""
             EXITCODE=1 && return 0
             ;;
         esac
     done
-    if [[ $DECOMPILE -eq 1 ]] && [[ ! -x "$CFR_CMD" ]]; then
+    if [[ "$COMMANDS" == "*decompile*" ]] && [[ ! -x "$CFR_CMD" ]]; then
         warning "cfr installation not found"
-        DECOMPILE=0
+        COMMANDS="${COMMANDS/decompile//}"
     fi
-    if [[ $LINT -eq 1 ]]; then
+    if [[ "$COMMANDS" == "*lint*" ]]; then
         if [[ ! -x "$SCALAFMT_CMD" ]]; then
             warning "Scalafmt installation not found"
-            LINT=0
+            COMMANDS="${COMMANDS/lint//}"
         elif [[ ! -f "$SCALAFMT_CONFIG_FILE" ]]; then
             warning "Scalafmt configuration file not found"
-            LINT=0
+            COMMANDS="${COMMANDS/lint//}"
         fi
     fi
-    debug "Options    : TIMER=$TIMER VERBOSE=$VERBOSE"
-    debug "Subcommands: CLEAN=$CLEAN COMPILE=$COMPILE DECOMPILE=$DECOMPILE HELP=$HELP LINT=$LINT RUN=$RUN"
+    debug "Options    : SCALA_VERSION=$SCALA_VERSION TIMER=$TIMER USE_RC=$USE_RC VERBOSE=$VERBOSE"
+    debug "Subcommands: $COMMANDS"
     [[ -n "$CFR_HOME" ]] && debug "Variables  : CFR_HOME=$CFR_HOME"
     debug "Variables  : JAVA_HOME=$JAVA_HOME"
+    debug "Variables  : SCALA_HOME=$SCALA_HOME"
     debug "Variables  : SCALA3_HOME=$SCALA3_HOME"
+    [[ -n "$SCALA3_RC_HOME" ]] && debug "Variables  : SCALA3_RC_HOME=$SCALA3_RC_HOME"
+    debug "Variables  : MAIN_CLASS=$MAIN_CLASS MAIN_ARGS=$MAIN_ARGS"
     # See http://www.cyberciti.biz/faq/linux-unix-formatting-dates-for-display/
     [[ $TIMER -eq 1 ]] && TIMER_START=$(date +"%s")
 }
 
-help() {
+print_help() {
     cat << EOS
 Usage: $BASENAME { <option> | <subcommand> }
 
   Options:
     -debug       print commands executed by this script
+    -rc          use Scala 3 release candidate if available
+    -scala2      use Scala 2 distribution
+    -scala3      use Scala 3 distribution (default)
     -timer       print total execution time
     -verbose     print progress messages
 
@@ -119,11 +128,11 @@ EOS
 clean() {
     if [[ -d "$TARGET_DIR" ]]; then
         if [[ $DEBUG -eq 1 ]]; then
-            debug "Delete directory \"$TARGET_DIR\""
+            debug "Delete directory \"$(mixed_path $TARGET_DIR)\""
         elif [[ $VERBOSE -eq 1 ]]; then
             echo "Delete directory \"${TARGET_DIR/$ROOT_DIR\//}\"" 1>&2
         fi
-        rm -rf "$TARGET_DIR"
+        rm -rf "$(mixed_path $TARGET_DIR)"
         [[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
     fi
 }
@@ -133,11 +142,11 @@ lint() {
     [[ $DEBUG -eq 1 ]] && scalfmt_opts="--debug $scalfmt_opts"
 
     if [[ $DEBUG -eq 1 ]]; then
-        debug "$SCALAFMT_CMD $scalfmt_opts $(mixed_path $MAIN_SOURCE_DIR)"
+        debug "$SCALAFMT_CMD $scalfmt_opts $(mixed_path $SOURCE_SCALA_DIR)"
     elif [[ $VERBOSE -eq 1 ]]; then
         echo "Analyze Scala source files with Scalafmt" 1>&2
     fi
-    eval "$SCALAFMT_CMD" $scalfmt_opts "$(mixed_path $MAIN_SOURCE_DIR)"
+    eval "$SCALAFMT_CMD" $scalfmt_opts "$(mixed_path $SOURCE_SCALA_DIR)"
     [[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
 }
 
@@ -156,8 +165,8 @@ compile() {
     if [[ $is_required -eq 1 ]]; then
         compile_scala
         [[ $? -eq 0 ]] || ( EXITCODE=1 && return 0 )
-        touch "$timestamp_file"
     fi
+    touch "$timestamp_file"
 }
 
 action_required() {
@@ -219,7 +228,7 @@ compile_scala() {
 
     local opts_file="$TARGET_DIR/scalac_opts.txt"
     local cpath="$CLASSES_DIR"
-    echo -color never -classpath "$(mixed_path $cpath)" -d "$(mixed_path $CLASSES_DIR)" > "$opts_file"
+    echo $SCALAC_OPTS -classpath "$(mixed_path $cpath)" -d "$(mixed_path $CLASSES_DIR)" > "$opts_file"
 
     local sources_file="$TARGET_DIR/scalac_sources.txt"
     [[ -f "$sources_file" ]] && rm "$sources_file"
@@ -239,7 +248,7 @@ compile_scala() {
         # call :version_string
         # if not !_EXITCODE!==0 goto :eof
         local print_file="$TARGET_DIR/scalac-print${VERSION_SUFFIX}.scala"
-        #if [ $SCALA_VERSION -eq 3 ]; then
+        #if [[ $SCALA_VERSION -eq 3 ]]; then
         #    set __PRINT_FILE_REDIRECT=2^> "$print_file"
         #else
         #    set __PRINT_FILE_REDIRECT=1^> "$print_file"
@@ -323,7 +332,7 @@ decompile() {
         if [[ $DEBUG -eq 1 ]]; then
             debug "$DIFF_CMD $diff_opts $(mixed_path $output_file) $(mixed_path $check_file)"
         elif [[ $VERBOSE -eq 1 ]]; then
-            echo "Compare output file with check file ${check_file/$ROOT_DIR\//}" 1>&2
+            echo "Compare output file with check file \"${check_file/$ROOT_DIR\//}\"" 1>&2
         fi
         eval "$DIFF_CMD" $diff_opts "$(mixed_path $output_file)" "$(mixed_path $check_file)"
         if [[ $? -ne 0 ]]; then
@@ -419,15 +428,20 @@ run() {
     fi
     # call :libs_cpath
     # if not %_EXITCODE%==0 goto :eof
+    local cpath="$(mixed_path $CLASSES_DIR)"
 
-    local scala_opts="-classpath \"$(mixed_path $CLASSES_DIR)\""
-
+    local scala_opts=
+    if [[ $USE_CODE_RUNNER -eq 1 ]]; then
+        scala_opts="run --main-class \"$MAIN_CLASS\" --classpath \"$cpath\" -- $MAIN_ARGS"
+    else
+        scala_opts="-classpath \"$cpath\" $MAIN_CLASS $MAIN_ARGS"
+    fi
     if [[ $DEBUG -eq 1 ]]; then
-        debug "$SCALA_CMD $scala_opts $MAIN_CLASS $MAIN_ARGS"
+        debug "$SCALA_CMD $scala_opts"
     elif [[ $VERBOSE -eq 1 ]]; then
         echo "Execute Scala main class \"$MAIN_CLASS\"" 1>&2
     fi
-    eval "$SCALA_CMD" $scala_opts $MAIN_CLASS $MAIN_ARGS
+    eval "$SCALA_CMD" $scala_opts
     if [[ $? -ne 0 ]]; then
         error "Failed to execute Scala main class \"$MAIN_CLASS\""
         cleanup 1
@@ -460,21 +474,16 @@ CLASSES_DIR="$TARGET_DIR/classes"
 
 ## We refrain from using `true` and `false` which are Bash commands
 ## (see https://man7.org/linux/man-pages/man1/false.1.html)
-CLEAN=0
-COMPILE=0
+COMMANDS=
 DEBUG=0
-DECOMPILE=0
-DOC=0
 HELP=0
-LINT=0
 MAIN_CLASS=Planet
 MAIN_ARGS=1
-RUN=0
 SCALA_VERSION=3
 SCALAC_OPTS_PRINT=0
 TASTY=0
-TEST=0
 TIMER=0
+USE_RC=0
 VERBOSE=0
 
 COLOR_START="[32m"
@@ -484,11 +493,13 @@ cygwin=0
 mingw=0
 msys=0
 darwin=0
+linux=0
 case "$(uname -s)" in
     CYGWIN*) cygwin=1 ;;
     MINGW*)  mingw=1 ;;
     MSYS*)   msys=1 ;;
-    Darwin*) darwin=1
+    Darwin*) darwin=1 ;;
+    Linux*)  linux=1
 esac
 unset CYGPATH_CMD
 PSEP=":"
@@ -498,7 +509,9 @@ if [[ $(($cygwin + $mingw + $msys)) -gt 0 ]]; then
     [[ -n "$CFR_HOME" ]] && CFR_HOME="$(mixed_path $CFR_HOME)"
     [[ -n "$GIT_HOME" ]] && GIT_HOME="$(mixed_path $GIT_HOME)"
     [[ -n "$JAVA_HOME" ]] && JAVA_HOME="$(mixed_path $JAVA_HOME)"
+    [[ -n "$SCALA_HOME" ]] && SCALA_HOME="$(mixed_path $SCALA_HOME)"
     [[ -n "$SCALA3_HOME" ]] && SCALA3_HOME="$(mixed_path $SCALA3_HOME)"
+    [[ -n "$SCALA3_RC_HOME" ]] && SCALA3_RC_HOME="$(mixed_path $SCALA3_RC_HOME)"
     DIFF_CMD="$GIT_HOME/usr/bin/diff.exe"
     SCALAFMT_CMD="$(mixed_path $LOCALAPPDATA)/Coursier/data/bin/scalafmt.bat"
 else
@@ -513,13 +526,15 @@ JAVA_CMD="$JAVA_HOME/bin/java"
 JAVAC_CMD="$JAVA_HOME/bin/javac"
 JAVADOC_CMD="$JAVA_HOME/bin/javadoc"
 
+if [[ ! -x "$SCALA_HOME/bin/scalac" ]]; then
+    error "Scala 2 installation not found"
+    cleanup 1
+fi
+
 if [[ ! -x "$SCALA3_HOME/bin/scalac" ]]; then
     error "Scala 3 installation not found"
     cleanup 1
 fi
-SCALA3="$SCALA3_HOME/bin/scala"
-SCALAC3="$SCALA3_HOME/bin/scalac"
-SCALADOC3="$SCALA3_HOME/bin/scaladoc"
 
 SCALAFMT_CONFIG_FILE="$(dirname $ROOT_DIR)/.scalafmt.conf"
 
@@ -533,34 +548,36 @@ PROJECT_VERSION="1.0-SNAPSHOT"
 args "$@"
 [[ $EXITCODE -eq 0 ]] || cleanup 1
 
-SCALA_CMD=$SCALA3
-SCALAC_CMD=$SCALAC3
-SCALADOC_CMD=$SCALADOC3
+USE_CODE_RUNNER=0
+if [[ $SCALA_VERSION -eq 2 ]]; then
+    SCALA_CMD="$SCALA_HOME/bin/scala"
+    SCALAC_CMD="$SCALA_HOME/bin/scalac"
+    SCALADOC_CMD="$SCALA_HOME/bin/scaladoc"
+    SCALAC_OPTS=
+    if [[ -d "$SOURCE_DIR/main/scala2" ]]; then
+        SOURCE_SCALA_DIR="$SOURCE_DIR/main/scala2"
+    fi
+elif [[ $USE_RC -eq 1 ]] && [[ -f "$SCALA3_RC_HOME/bin/scalac" ]]; then
+    SCALA_CMD="$SCALA3_RC_HOME/bin/scala"
+    SCALAC_CMD="$SCALA3_RC_HOME/bin/scalac"
+    SCALADOC_CMD="$SCALA3_RC_HOME/bin/scaladoc"
+    SCALAC_OPTS="-color never"
+    [[ -f "$SCALA3_RC_HOME/libexec/common" ]] && USE_CODE_RUNNER=1
+else
+    SCALA_CMD="$SCALA3_HOME/bin/scala"
+    SCALAC_CMD="$SCALA3_HOME/bin/scala"
+    SCALADOC_CMD="$SCALA3_HOME/bin/scala"
+    SCALAC_OPTS="-color never"
+    [[ -f "$SCALA3_HOME/libexec/common" ]] && USE_CODE_RUNNER=1
+fi
 
 ##############################################################################
 ## Main
 
-[[ $HELP -eq 1 ]] && help && cleanup
+[[ $HELP -eq 1 ]] && print_help && cleanup
 
-if [[ $CLEAN -eq 1 ]]; then
-    clean || cleanup 1
-fi
-if [[ $LINT -eq 1 ]]; then
-    lint || cleanup 1
-fi
-if [[ $COMPILE -eq 1 ]]; then
-    compile || cleanup 1
-fi
-if [[ $DECOMPILE -eq 1 ]]; then
-    decompile || cleanup 1
-fi
-if [[ $DOC -eq 1 ]]; then
-    doc || cleanup 1
-fi
-if [[ $RUN -eq 1 ]]; then
-    run || cleanup 1
-fi
-if [[ $TEST -eq 1 ]]; then
-    run_tests || cleanup 1
-fi
+for cmd in $COMMANDS; do
+   $cmd
+   [[ $EXITCODE -eq 0 ]] || cleanup 1
+done
 cleanup

@@ -5,6 +5,8 @@
 ##
 ##############################################################################
 
+DEBUG ?= 0
+
 include ../Makefile.inc
 
 SOURCE_DIR  = src
@@ -85,7 +87,7 @@ doc: build $(DOC_TARGET)
 ## lint rules
 
 SCALAFMT_CONFIG_FILE = $(shell dirname $(CURDIR))/.scalafmt.conf
-ifdef DEBUG
+ifeq ($(DEBUG),$(filter $(DEBUG),1 true))
 SCALAFMT_OPTS = --debug --test --config "$(SCALAFMT_CONFIG_FILE)"
 else
 SCALAFMT_OPTS = --test --config "$(SCALAFMT_CONFIG_FILE)"

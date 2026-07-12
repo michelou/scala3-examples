@@ -32,7 +32,7 @@ set __SCALA_XML_VERSION=2.4.0
 @rem https://mvnrepository.com/artifact/org.scalatest/scalatest
 set __SCALATEST_VERSION=3.2.20
 @rem https://mvnrepository.com/artifact/org.specs2/specs2-core
-set __SPECS2_VERSION=5.9.0
+set __SPECS2_VERSION=5.9.1
 
 @rem #########################################################################
 @rem ## Libraries to be added to _LIBS_CPATH
@@ -102,6 +102,10 @@ call :add_jar "com.chuusai" "shapeless_%__SCALA_BINARY_VERSION%" "2.3.13"
 
 @rem https://mvnrepository.com/artifact/eu.timepit/refined
 call :add_jar "eu.timepit" "refined_3" "0.11.0"
+
+@rem https://mvnrepository.com/artifact/com.typesafe/config
+@rem used in example "Implicits"
+call :add_jar "com.typesafe" "config" "1.4.3"
 
 goto end
 
